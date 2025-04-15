@@ -1,4 +1,4 @@
-name: Code Linter and Formatter
+name: Code Linter
 
 on:
   push:
@@ -8,16 +8,24 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: Pokemon.sln
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
 
-    - name: Run Code Linter
-      run: dotnet format
+    - name: Install CSharpier
+      run: dotnet tool install --global csharpier
+
+    - name: Linting solution
+      run: dotnet csharpier --check .
