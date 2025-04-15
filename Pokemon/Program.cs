@@ -1,10 +1,10 @@
+using Backend;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Pokemon.Components;
 using Pokemon.Components.Account;
-using Pokemon.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

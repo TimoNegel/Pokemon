@@ -1,5 +1,5 @@
+using Backend;
 using Microsoft.AspNetCore.Identity;
-using Pokemon.Data;
 
 namespace Pokemon.Components.Account
 {
