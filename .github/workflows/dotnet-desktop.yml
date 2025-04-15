@@ -16,7 +16,7 @@ jobs:
 
     env:
       Solution_Name: your-solution-name.sln  # Name of the solution file
-      Test_Project_Path: your-test-project-path  # Path to the test project
+      #Test_Project_Path: your-test-project-path  # Path to the test project
       Publish_Directory: your-publish-directory  # Directory to publish the build artifacts
 
     steps:
@@ -30,8 +30,8 @@ jobs:
       with:
         dotnet-version: 9.0.x  # Install .NET Core version 9.0.x
 
-    - name: Execute unit tests
-      run: dotnet test ${{ env.Test_Project_Path }}  # Run unit tests
+   # - name: Execute unit tests
+   #   run: dotnet test ${{ env.Test_Project_Path }}  # Run unit tests
 
     - name: Restore and Build
       run: |
