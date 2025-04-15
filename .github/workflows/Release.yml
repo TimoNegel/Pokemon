@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger the workflow on version tags
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: Pokemon.sln
+      Publish_Directory: publish
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Restore and Build
+      run: |
+        dotnet restore ${{ env.Solution_Name }}
+        dotnet build ${{ env.Solution_Name }} --configuration Release
+      env:
+        Configuration: Release
+
+    - name: Publish Blazor Server Application
+      run: dotnet publish ${{ env.Solution_Name }} --configuration Release --output ${{ env.Publish_Directory }}
+      env:
+        Configuration: Release
+
+    - name: Upload release artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Release Artifact
+        path: ${{ env.Publish_Directory }}
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Release notes for ${{ github.ref }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
