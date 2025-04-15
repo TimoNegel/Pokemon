@@ -15,9 +15,9 @@ jobs:
     runs-on: windows-latest  # Use the latest Windows runner
 
     env:
-      Solution_Name: your-solution-name.sln  # Name of the solution file
+      Solution_Name: Pokemon.sln  # Name of the solution file
       #Test_Project_Path: your-test-project-path  # Path to the test project
-      Publish_Directory: your-publish-directory  # Directory to publish the build artifacts
+      Publish_Directory: publish  # Directory to publish the build artifacts
 
     steps:
     - name: Checkout
