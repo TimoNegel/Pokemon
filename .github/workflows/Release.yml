@@ -24,7 +24,7 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: Bump Version
-      uses: mediatech15/dotnet-bump-version-action@1.0.0
+      uses: SiqiLu/dotnet-bump-version@2.1.0
       with:
         version_files: '**/*.csproj'
         bump: patch
