@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Pokemon.Components.Account
 {
-    internal sealed class IdentityUserAccessor(UserManager<ApplicationUser> userManager, IdentityRedirectManager redirectManager)
+    internal sealed class IdentityUserAccessor(
+        UserManager<ApplicationUser> userManager,
+        IdentityRedirectManager redirectManager
+    )
     {
         public async Task<ApplicationUser> GetRequiredUserAsync(HttpContext context)
         {
@@ -11,7 +14,11 @@ namespace Pokemon.Components.Account
 
             if (user is null)
             {
-                redirectManager.RedirectToWithStatus("Account/InvalidUser", $"Error: Unable to load user with ID '{userManager.GetUserId(context.User)}'.", context);
+                redirectManager.RedirectToWithStatus(
+                    "Account/InvalidUser",
+                    $"Error: Unable to load user with ID '{userManager.GetUserId(context.User)}'.",
+                    context
+                );
             }
 
             return user;
