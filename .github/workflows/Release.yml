@@ -23,6 +23,15 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
+    - name: Bump Version
+      uses: mediatech15/dotnet-bump-version-action@1.0.0
+      with:
+        version_files: '**/*.csproj'
+        bump: patch
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        do_commit: true
+        do_tag: true
+
     - name: Restore and Build
       run: |
         dotnet restore ${{ env.Solution_Name }}
