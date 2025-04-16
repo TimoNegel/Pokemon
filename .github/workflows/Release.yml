@@ -23,15 +23,6 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
-    - name: Bump Version
-      uses: SiqiLu/dotnet-bump-version@2.1.0
-      with:
-        version_files: '**/*.csproj'
-        bump: patch
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        do_commit: true
-        do_tag: true
-
     - name: Restore and Build
       run: |
         dotnet restore ${{ env.Solution_Name }}
@@ -50,13 +41,38 @@ jobs:
         name: Release Artifact
         path: ${{ env.Publish_Directory }}
 
+    - name: Get latest tag
+      id: get_tag
+      run: |
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
+    - name: Increment version
+      id: increment_version
+      run: |
+        latest_tag=${{ steps.get_tag.outputs.latest_tag }}
+        IFS='.' read -r -a version_parts <<< "$latest_tag"
+        major=${version_parts[0]}
+        minor=${version_parts[1]}
+        patch=${version_parts[2]}
+        new_patch=$((patch + 1))
+        new_tag="$major.$minor.$new_patch"
+        echo "new_tag=$new_tag" >> $GITHUB_ENV
+
+    - name: Create Tag
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git tag -a "v${{ env.new_tag }}" -m "Release v${{ env.new_tag }}"
+        git push origin "v${{ env.new_tag }}"
+
     - name: Create GitHub Release
       uses: actions/create-release@v1
       with:
-        tag_name: v1.0.0
-        release_name: Release v1.0.0
+        tag_name: v${{ env.new_tag }}
+        release_name: Release v${{ env.new_tag }}
         body: |
-          Release notes for v1.0.0
+          Release notes for v${{ env.new_tag }}
         draft: false
         prerelease: false
       env:
