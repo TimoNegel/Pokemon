@@ -2,15 +2,14 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'  # Trigger the workflow on version tags
+    branches: [master]
 
 jobs:
   release:
     runs-on: windows-latest
 
     env:
-      Solution_Name: Pokemon.sln
+      Solution_Name: Pokemon/Pokemon.sln
       Publish_Directory: publish
 
     steps:
