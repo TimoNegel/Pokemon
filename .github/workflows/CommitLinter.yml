@@ -1,20 +1,13 @@
-name: Commit Linter
+name: Lint Commit Messages
+on: [pull_request]
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   commitlint:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Run commit linter
-      uses: wagoid/commitlint-github-action@v6.2.1
+      - uses: actions/checkout@v4
+      - uses: wagoid/commitlint-github-action@v6
