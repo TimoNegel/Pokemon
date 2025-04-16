@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   commitlint:
     runs-on: ubuntu-latest
@@ -15,8 +19,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+      - 
 
     - name: Run commit linter
       uses: wagoid/commitlint-github-action@v6.2.1
-      env:
-        NODE_PATH: ${{ github.workspace }}/node_modules
