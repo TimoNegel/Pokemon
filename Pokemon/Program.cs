@@ -1,4 +1,6 @@
 using Backend;
+using Backend.Models;
+using Backend.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,14 +41,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder
-    .Services.AddIdentityCore<ApplicationUser>(options =>
+    .Services.AddIdentityCore<ApplicationUserModel>(options =>
         options.SignIn.RequireConfirmedAccount = true
     )
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUserModel>, IdentityNoOpEmailSender>();
+
+// Add HTTP Client for API calls
+builder.Services.AddHttpClient();
+
+// Add coustom services
+builder.Services.AddScoped<PokemonService>();
 
 var app = builder.Build();
 

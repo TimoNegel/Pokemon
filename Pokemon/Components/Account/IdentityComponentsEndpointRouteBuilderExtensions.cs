@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using System.Text.Json;
-using Backend;
+using Backend.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -27,7 +27,7 @@ namespace Microsoft.AspNetCore.Routing
                 "/PerformExternalLogin",
                 (
                     HttpContext context,
-                    [FromServices] SignInManager<ApplicationUser> signInManager,
+                    [FromServices] SignInManager<ApplicationUserModel> signInManager,
                     [FromForm] string provider,
                     [FromForm] string returnUrl
                 ) =>
@@ -56,7 +56,7 @@ namespace Microsoft.AspNetCore.Routing
                 "/Logout",
                 async (
                     ClaimsPrincipal user,
-                    [FromServices] SignInManager<ApplicationUser> signInManager,
+                    [FromServices] SignInManager<ApplicationUserModel> signInManager,
                     [FromForm] string returnUrl
                 ) =>
                 {
@@ -71,7 +71,7 @@ namespace Microsoft.AspNetCore.Routing
                 "/LinkExternalLogin",
                 async (
                     HttpContext context,
-                    [FromServices] SignInManager<ApplicationUser> signInManager,
+                    [FromServices] SignInManager<ApplicationUserModel> signInManager,
                     [FromForm] string provider
                 ) =>
                 {
@@ -100,7 +100,7 @@ namespace Microsoft.AspNetCore.Routing
                 "/DownloadPersonalData",
                 async (
                     HttpContext context,
-                    [FromServices] UserManager<ApplicationUser> userManager,
+                    [FromServices] UserManager<ApplicationUserModel> userManager,
                     [FromServices] AuthenticationStateProvider authenticationStateProvider
                 ) =>
                 {
@@ -120,7 +120,7 @@ namespace Microsoft.AspNetCore.Routing
 
                     // Only include personal data for download
                     var personalData = new Dictionary<string, string>();
-                    var personalDataProps = typeof(ApplicationUser)
+                    var personalDataProps = typeof(ApplicationUserModel)
                         .GetProperties()
                         .Where(prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
                     foreach (var p in personalDataProps)

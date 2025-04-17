@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using Backend.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor.StaticInput
 @using Microsoft.AspNetCore.Components.Forms
@@ -13,3 +14,7 @@
 @using Pokemon
 @using Pokemon.Components
 @using Backend;
+@using Backend.Models
+
+@inject PokemonService PokemonService
+

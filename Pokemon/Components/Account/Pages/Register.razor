@@ -4,14 +4,15 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using Backend
+@using Backend.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IUserStore<ApplicationUser> UserStore
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IEmailSender<ApplicationUser> EmailSender
+@inject UserManager<ApplicationUserModel> UserManager
+@inject IUserStore<ApplicationUserModel> UserStore
+@inject SignInManager<ApplicationUserModel> SignInManager
+@inject IEmailSender<ApplicationUserModel> EmailSender
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
@@ -104,26 +105,26 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
-    private static ApplicationUser CreateUser()
+    private static ApplicationUserModel CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<ApplicationUser>();
+            return Activator.CreateInstance<ApplicationUserModel>();
         }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUserModel)}'. " +
+                $"Ensure that '{nameof(ApplicationUserModel)}' is not an abstract class and has a parameterless constructor.");
         }
     }
 
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    private IUserEmailStore<ApplicationUserModel> GetEmailStore()
     {
         if (!UserManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
-        return (IUserEmailStore<ApplicationUser>)UserStore;
+        return (IUserEmailStore<ApplicationUserModel>)UserStore;
     }
 
     private sealed class InputModel

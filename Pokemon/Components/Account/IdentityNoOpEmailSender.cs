@@ -1,16 +1,16 @@
-using Backend;
+using Backend.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Pokemon.Components.Account
 {
     // Remove the "else if (EmailSender is IdentityNoOpEmailSender)" block from RegisterConfirmation.razor after updating with a real implementation.
-    internal sealed class IdentityNoOpEmailSender : IEmailSender<ApplicationUser>
+    internal sealed class IdentityNoOpEmailSender : IEmailSender<ApplicationUserModel>
     {
         private readonly IEmailSender emailSender = new NoOpEmailSender();
 
         public Task SendConfirmationLinkAsync(
-            ApplicationUser user,
+            ApplicationUserModel user,
             string email,
             string confirmationLink
         ) =>
@@ -21,7 +21,7 @@ namespace Pokemon.Components.Account
             );
 
         public Task SendPasswordResetLinkAsync(
-            ApplicationUser user,
+            ApplicationUserModel user,
             string email,
             string resetLink
         ) =>
@@ -32,7 +32,7 @@ namespace Pokemon.Components.Account
             );
 
         public Task SendPasswordResetCodeAsync(
-            ApplicationUser user,
+            ApplicationUserModel user,
             string email,
             string resetCode
         ) =>

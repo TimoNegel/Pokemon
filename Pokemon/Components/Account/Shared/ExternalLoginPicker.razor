@@ -1,11 +1,12 @@
 ﻿@using Backend
+@using Backend.Models
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using MudBlazor
 @using MudBlazor.StaticInput
 
 
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<ApplicationUserModel> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
 @if (externalLogins.Length == 0)
