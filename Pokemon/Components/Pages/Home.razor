@@ -1,3 +1,44 @@
 ﻿@page "/"
 
 <PageTitle>Dashboard</PageTitle>
+
+<MudGrid>
+    <Virtualize Items="@pokemons" Context="context">
+        <MudItem xs="12" sm="6" md="4" lg="3" xl="2">
+            <MudCard>
+                <MudCardMedia Image="@context.BildUrl" />
+                <MudCardContent>
+                    <MudText Typo="Typo.h6">@CapitalizeFirstLetter(context.Name)</MudText>
+                </MudCardContent>
+                <MudCardActions Class="pl-4 pb-4">
+                    <MudButton Class="@($"rounded-pill {context.Primärtyp}")" Variant="Variant.Filled">@context.Primärtyp</MudButton>
+                    @if(!string.IsNullOrEmpty(context.Sekundärtyp)){
+                        <MudButton Class="@($"rounded-pill ml-5 {context.Sekundärtyp}")" Variant="Variant.Filled">@context.Sekundärtyp</MudButton>
+                    }
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </Virtualize>
+</MudGrid>
+
+@code {
+    private List<PokemonModel> pokemons =[];
+
+    protected override async Task OnInitializedAsync()
+    {
+        pokemons = await PokemonService.GetPokemonsDetailsAsync(12);
+        _ = pokemons;
+    }
+
+
+    public static string CapitalizeFirstLetter(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return input;
+        }
+
+        return char.ToUpper(input[0]) + input.Substring(1).ToLower();
+    }
+
+}
