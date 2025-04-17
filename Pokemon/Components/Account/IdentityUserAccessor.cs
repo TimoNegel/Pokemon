@@ -1,14 +1,14 @@
-using Backend;
+using Backend.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace Pokemon.Components.Account
 {
     internal sealed class IdentityUserAccessor(
-        UserManager<ApplicationUser> userManager,
+        UserManager<ApplicationUserModel> userManager,
         IdentityRedirectManager redirectManager
     )
     {
-        public async Task<ApplicationUser> GetRequiredUserAsync(HttpContext context)
+        public async Task<ApplicationUserModel> GetRequiredUserAsync(HttpContext context)
         {
             var user = await userManager.GetUserAsync(context.User);
 

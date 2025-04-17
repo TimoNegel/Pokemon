@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Backend;
+using Backend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
@@ -25,13 +25,13 @@ namespace Pokemon.Components.Account
             // Get the user manager from a new scope to ensure it fetches fresh data
             await using var scope = scopeFactory.CreateAsyncScope();
             var userManager = scope.ServiceProvider.GetRequiredService<
-                UserManager<ApplicationUser>
+                UserManager<ApplicationUserModel>
             >();
             return await ValidateSecurityStampAsync(userManager, authenticationState.User);
         }
 
         private async Task<bool> ValidateSecurityStampAsync(
-            UserManager<ApplicationUser> userManager,
+            UserManager<ApplicationUserModel> userManager,
             ClaimsPrincipal principal
         )
         {

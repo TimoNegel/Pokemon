@@ -1,8 +1,9 @@
 ﻿@using Backend
+@using Backend.Models
 @using Microsoft.AspNetCore.Identity
 
 
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<ApplicationUserModel> SignInManager
 
 <MudNavMenu>
     <MudNavLink Href="Account/Manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>

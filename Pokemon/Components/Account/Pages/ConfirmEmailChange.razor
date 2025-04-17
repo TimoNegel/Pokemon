@@ -2,11 +2,12 @@
 
 @using System.Text
 @using Backend
+@using Backend.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUserModel> UserManager
+@inject SignInManager<ApplicationUserModel> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Confirm email change</PageTitle>

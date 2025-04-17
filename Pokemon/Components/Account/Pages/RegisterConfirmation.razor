@@ -2,12 +2,13 @@
 
 @using System.Text
 @using Backend
+@using Backend.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IEmailSender<ApplicationUser> EmailSender
+@inject UserManager<ApplicationUserModel> UserManager
+@inject IEmailSender<ApplicationUserModel> EmailSender
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 

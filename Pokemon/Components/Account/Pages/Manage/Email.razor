@@ -4,12 +4,13 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using Backend
+@using Backend.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IEmailSender<ApplicationUser> EmailSender
+@inject UserManager<ApplicationUserModel> UserManager
+@inject IEmailSender<ApplicationUserModel> EmailSender
 @inject IdentityUserAccessor UserAccessor
 @inject NavigationManager NavigationManager
 
@@ -55,7 +56,7 @@
 
 @code {
     private string? message;
-    private ApplicationUser user = default!;
+    private ApplicationUserModel user = default!;
     private string? email;
     private bool isEmailConfirmed;
 
