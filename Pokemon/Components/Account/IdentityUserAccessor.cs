@@ -12,7 +12,7 @@ namespace Pokemon.Components.Account
         {
             var user = await userManager.GetUserAsync(context.User);
 
-            if (user is null)
+            if(user is null)
             {
                 redirectManager.RedirectToWithStatus(
                     "Account/InvalidUser",

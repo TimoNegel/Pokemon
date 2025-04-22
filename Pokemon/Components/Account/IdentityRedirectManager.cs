@@ -1,5 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Pokemon.Components.Account
 {
@@ -21,7 +21,7 @@ namespace Pokemon.Components.Account
             uri ??= "";
 
             // Prevent open redirects.
-            if (!Uri.IsWellFormedUriString(uri, UriKind.Relative))
+            if(!Uri.IsWellFormedUriString(uri, UriKind.Relative))
             {
                 uri = navigationManager.ToBaseRelativePath(uri);
             }

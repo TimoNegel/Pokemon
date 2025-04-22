@@ -1,6 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using Backend.Models;
+using System.Net.Http.Json;
 using System.Text.Json;
-using Backend.Models;
 
 namespace Backend.Services
 {
@@ -71,7 +71,7 @@ namespace Backend.Services
         {
             List<PokemonModel>? result = [];
             limit = (limit > 100000 || limit < 0) ? 100000 : limit;
-            for (int id = 1; id <= limit; id++)
+            for(int id = 1; id <= limit; id++)
             {
                 result.Add(await GetPokemonDetailsAsyncById(id));
             }
@@ -80,7 +80,7 @@ namespace Backend.Services
 
         public static string CapitalizeFirstLetter(string input)
         {
-            if (string.IsNullOrEmpty(input))
+            if(string.IsNullOrEmpty(input))
             {
                 return input;
             }

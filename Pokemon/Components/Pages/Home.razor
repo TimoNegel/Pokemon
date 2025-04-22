@@ -3,7 +3,8 @@
     .searchBar {
         width: 300px !important;
         background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 25px !important; }
+        border-radius: 25px !important;
+    }
 
     .mud-input.mud-input-filled {
         background-color: transparent !important;
@@ -50,7 +51,7 @@
         <MudIconButton Size="Size.Small" Icon="@(CardListViewButtonIcon)" Color="Color.Inherit" OnClick="@(() => isCardView = !isCardView)" Class="d-inline-block align-self-end" />
     </MudItem>
 </MudGrid>
-@if (isCardView)
+@if(isCardView)
 {
     <MudGrid>
         <Virtualize Items="@(searchedPokemons.Any() ? searchedPokemons : filteredPokemons)" Context="context">
@@ -58,12 +59,12 @@
                 <MudCard>
                     <MudCardMedia Image="@context.BildUrl" />
                     <MudCardContent Class="d-flex justify-between">
-                       <MudText Typo="Typo.h6">@context.Name</MudText>
-                       <MudText Typo="Typo.h6" Class="ml-auto">@($"#{context.Id}")</MudText>
+                        <MudText Typo="Typo.h6">@context.Name</MudText>
+                        <MudText Typo="Typo.h6" Class="ml-auto">@($"#{context.Id}")</MudText>
                     </MudCardContent>
                     <MudCardActions Class="pl-4 pb-4">
                         <MudButton Class="@($"rounded-pill {context.Primärtyp.ToLower()}")" Variant="Variant.Filled">@context.Primärtyp</MudButton>
-                        @if (!string.IsNullOrEmpty(context.Sekundärtyp))
+                        @if(!string.IsNullOrEmpty(context.Sekundärtyp))
                         {
                             <MudButton Class="@($"rounded-pill ml-5 {context.Sekundärtyp.ToLower()}")" Variant="Variant.Filled">@context.Sekundärtyp</MudButton>
                         }
@@ -120,7 +121,7 @@ else
 
     public void FilterByType()
     {
-        if (selectedTypes.Count() == 0)
+        if(selectedTypes.Count() == 0)
         {
             filteredPokemons = pokemons;
         }
@@ -132,7 +133,7 @@ else
 
     private async Task<IEnumerable<string>> SearchPokemon(string value, CancellationToken token)
     {
-        if (string.IsNullOrEmpty(value))
+        if(string.IsNullOrEmpty(value))
         {
             searchedPokemons = [];
             StateHasChanged();
