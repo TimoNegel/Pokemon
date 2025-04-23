@@ -1,21 +1,9 @@
 ﻿@page "/"
-<style>
-    .searchBar {
-    width: 300px !important;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 25px !important; }
 
-    .mud-input.mud-input-filled {
-    background-color: transparent !important;
-    }
-
-</style>
 <PageTitle>Dashboard</PageTitle>
 
-<MudAutocomplete class="searchBar" Variant="Variant.Filled" T="string" Placeholder="Pokemon nach ID oder Name suchen" SearchFunc="@SearchPokemon" ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="@true" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
-
 <MudGrid Class="py-4">
-    <MudItem Class="py-0" xs="12" sm="5">
+    <MudItem Class="py-0" xs="12" sm="2">
         <MudSelect T="string" Label="Filter by types" MultiSelection="true" ValueChanged="FilterByType" @bind-SelectedValues="selectedTypes">
             <MudSelectItem Value="@("Normal")">Normal</MudSelectItem>
             <MudSelectItem Value="@("Fighting")">Fighting</MudSelectItem>
@@ -38,14 +26,14 @@
             <MudSelectItem Value="@("Stellar")">Stellar</MudSelectItem>
         </MudSelect>
     </MudItem>
-    <MudItem Class="py-0" xs="12" sm="5">
+    <MudItem Class="py-0" xs="12" sm="2">
         <MudSelect T="string" Label="Filter by generation" MultiSelection="true" @bind-SelectedValues="selectedGen">
             <MudSelectItem Value="@("xxx")">Gen 1</MudSelectItem>
             <MudSelectItem Value="@("xxx")">Gen 2</MudSelectItem>
             <MudSelectItem Value="@("xxx")">Gen 3</MudSelectItem>
         </MudSelect>
     </MudItem>
-    <MudItem xs="12" sm="2" Class="d-flex py-0 justify-end">
+    <MudItem xs="12" sm="8" Class="d-flex py-0 justify-end">
         <MudText Typo="Typo.body2" Class="d-inline-block align-self-end">View:</MudText>
         <MudIconButton Size="Size.Small" Icon="@(CardListViewButtonIcon)" Color="Color.Inherit" OnClick="@(() => isCardView = !isCardView)" Class="d-inline-block align-self-end" />
     </MudItem>
@@ -53,7 +41,7 @@
 @if(isCardView)
 {
     <MudGrid>
-        @foreach(PokemonModel model in (searchedPokemons.Any() ? searchedPokemons : filteredPokemons))
+        @foreach(PokemonModel model in (PokemoStorage.SearchedPokemons.Any() ? PokemoStorage.SearchedPokemons : filteredPokemons))
         {
             <MudItem xs="12" sm="6" md="4" lg="3" xl="2" @key="model.Id">
                 <MudCard>
@@ -76,7 +64,7 @@
 }
 else
 {
-    <MudDataGrid T="PokemonModel" Items="@(searchedPokemons.Any() ? searchedPokemons : filteredPokemons)" Bordered="true">
+    <MudDataGrid T="PokemonModel" Items="@(PokemoStorage.SearchedPokemons.Any() ? PokemoStorage.SearchedPokemons : filteredPokemons)" Bordered="true">
         <Columns>
             <PropertyColumn Property="x => x.Id" Title="Id" />
             <PropertyColumn Property="x => x.Name" Title="Name" />
@@ -99,20 +87,20 @@ else
 @code {
     private IEnumerable<string> selectedTypes = new List<string>();
     private IEnumerable<string> selectedGen = new List<string>();
-    private string searchString = string.Empty;
 
-    private List<PokemonModel> pokemons = [];
     private List<PokemonModel> filteredPokemons = [];
-    private List<PokemonModel> searchedPokemons = [];
 
     private bool isCardView = true;
 
     protected override async Task OnInitializedAsync()
     {
+        PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
+        PokemoStorage.pokemons = [];
+        // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert 
         await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(386))
         {
-            pokemons.Add(pokemon);
-            filteredPokemons = pokemons;
+            PokemoStorage.pokemons.Add(pokemon);
+            filteredPokemons = PokemoStorage.pokemons;
             StateHasChanged();
         }
     }
@@ -127,26 +115,12 @@ else
     {
         if (selectedTypes.Count() == 0)
         {
-            filteredPokemons = pokemons;
+            filteredPokemons = PokemoStorage.pokemons;
         }
         else
         {
-            filteredPokemons = pokemons.Where(p => selectedTypes.Contains(p.Primärtyp) || selectedTypes.Contains(p.Sekundärtyp)).ToList();
+            filteredPokemons = PokemoStorage.pokemons.Where(p => selectedTypes.Contains(p.Primärtyp) || selectedTypes.Contains(p.Sekundärtyp)).ToList();
         }
-    }
-
-    private async Task<IEnumerable<string>> SearchPokemon(string value, CancellationToken token)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            searchedPokemons = [];
-            StateHasChanged();
-            return new string[0];
-        }
-
-        searchedPokemons = pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase) || x.Id == value.PadLeft(4, '0') || x.Id == value).ToList();
         StateHasChanged();
-        return pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name);
     }
-
 }
