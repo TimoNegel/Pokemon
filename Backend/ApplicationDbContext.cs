@@ -5,5 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Backend
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : IdentityDbContext<ApplicationUserModel>(options) { }
+        : IdentityDbContext<ApplicationUserModel>(options)
+    {
+        public DbSet<PokemonModel> PokemonsCache { get; set; }
+    }
 }
