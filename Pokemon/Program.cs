@@ -54,6 +54,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUserModel>, IdentityNoOpEm
 builder.Services.AddHttpClient();
 
 // Add coustom services
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<PokemonService>();
 
 var app = builder.Build();
