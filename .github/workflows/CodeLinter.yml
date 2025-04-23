@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      Solution_Name: Pokemon.sln
+      Solution_Name: Pokemon/Pokemon.sln
 
     steps:
     - name: Checkout
@@ -24,8 +24,15 @@ jobs:
       with:
         dotnet-version: 9.0.x
 
+    - name: Restore .NET tools
+      run: dotnet tool restore
+    
     - name: Install CSharpier
       run: dotnet tool install --global csharpier
-
+      env:
+        DOTNET_ROOT: C:\Users\runneradmin\.dotnet
+    
     - name: Linting solution
       run: dotnet csharpier --check .
+      env:
+        PATH: C:\Users\runneradmin\.dotnet\tools;${{ env.PATH }}
