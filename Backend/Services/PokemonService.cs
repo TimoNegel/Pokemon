@@ -1,5 +1,4 @@
-﻿using Backend.Models;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Text.Json;
 using Backend.Models;
 using Microsoft.Extensions.Caching.Memory;
@@ -31,7 +30,8 @@ namespace Backend.Services
 
                 pokemon = new PokemonModel
                 {
-                    Name = response.GetProperty("name").GetString(),
+                    Id = response.GetProperty("id").GetInt32().ToString().PadLeft(4, '0'),
+                    Name = response.GetProperty("name").GetString().CapitalizeFirstLetter(),
                     BildUrl = response
                         .GetProperty("sprites")
                         .GetProperty("front_default")
@@ -40,7 +40,8 @@ namespace Backend.Services
                         .GetProperty("types")[0]
                         .GetProperty("type")
                         .GetProperty("name")
-                        .GetString(),
+                        .GetString()
+                        .CapitalizeFirstLetter(),
                     Sekundärtyp =
                         response.GetProperty("types").GetArrayLength() > 1
                             ? response
@@ -48,16 +49,19 @@ namespace Backend.Services
                                 .GetProperty("type")
                                 .GetProperty("name")
                                 .GetString()
+                                .CapitalizeFirstLetter()
                             : string.Empty,
                     Habitat = speciesResponse
                         .GetProperty("habitat")
                         .GetProperty("name")
-                        .GetString(),
+                        .GetString()
+                        .CapitalizeFirstLetter(),
                     Hauptfähigkeit = response
                         .GetProperty("abilities")[0]
                         .GetProperty("ability")
                         .GetProperty("name")
-                        .GetString(),
+                        .GetString()
+                        .CapitalizeFirstLetter(),
                     VersteckteFähigkeit =
                         response.GetProperty("abilities").GetArrayLength() > 1
                             ? response
@@ -65,6 +69,7 @@ namespace Backend.Services
                                 .GetProperty("ability")
                                 .GetProperty("name")
                                 .GetString()
+                                .CapitalizeFirstLetter()
                             : string.Empty,
                     Angriff = response.GetProperty("stats")[1].GetProperty("base_stat").GetInt32(),
                     Verteidigung = response
@@ -85,7 +90,7 @@ namespace Backend.Services
         {
             List<PokemonModel>? result = [];
             limit = (limit > 100000 || limit < 0) ? 100000 : limit;
-            for(int id = 1; id <= limit; id++)
+            for (int id = 1; id <= limit; id++)
             {
                 result.Add(await GetPokemonDetailsAsyncById(id));
             }
@@ -94,7 +99,7 @@ namespace Backend.Services
 
         public static string CapitalizeFirstLetter(string input)
         {
-            if(string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
                 return input;
             }
