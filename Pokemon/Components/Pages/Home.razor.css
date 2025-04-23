@@ -1,0 +1,9 @@
+﻿::deep .searchBar {
+    width: 300px !important;
+    background-color: blue;
+    border-radius: 10px !important;
+}
+
+.mud-input.mud-input-filled {
+    background-color: transparent !important;
+}

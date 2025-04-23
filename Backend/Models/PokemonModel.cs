@@ -2,6 +2,7 @@
 {
     public class PokemonModel
     {
+        public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string BildUrl { get; set; } = string.Empty;
         public string Primärtyp { get; set; } = string.Empty;

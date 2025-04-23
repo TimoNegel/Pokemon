@@ -13,8 +13,10 @@
     <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
     </MudDrawer>
-    <MudMainContent Class="pt-20 pa-4">
-        @Body
+    <MudMainContent  Class="pt-20 pa-4">
+        <MudContainer Class="pa-0" MaxWidth="MaxWidth.ExtraLarge">
+            @Body
+        </MudContainer> 
     </MudMainContent>
 </MudLayout>
 
@@ -59,9 +61,9 @@
     };
 
     private readonly PaletteLight _lightPalette = new()
-        {
-   
-        };
+    {
+        
+    };
 
     private readonly PaletteDark _darkPalette = new()
         {

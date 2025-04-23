@@ -1,3 +1,148 @@
 ﻿@page "/"
+<style>
+    .searchBar {
+        width: 300px !important;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 25px !important;
+    }
 
+    .mud-input.mud-input-filled {
+        background-color: transparent !important;
+    }
+
+</style>
 <PageTitle>Dashboard</PageTitle>
+
+<MudAutocomplete class="searchBar" Variant="Variant.Filled" T="string" Placeholder="Pokemon nach ID oder Name suchen" SearchFunc="@SearchPokemon" ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="@true" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+
+<MudGrid Class="py-4">
+    <MudItem Class="py-0" xs="12" sm="5">
+        <MudSelect T="string" Label="Filter by types" MultiSelection="true" ValueChanged="FilterByType" @bind-SelectedValues="selectedTypes">
+            <MudSelectItem Value="@("normal")">Normal</MudSelectItem>
+            <MudSelectItem Value="@("fighting")">Fighting</MudSelectItem>
+            <MudSelectItem Value="@("flying")">Flying</MudSelectItem>
+            <MudSelectItem Value="@("poison")">Poison</MudSelectItem>
+            <MudSelectItem Value="@("ground")">Ground</MudSelectItem>
+            <MudSelectItem Value="@("rock")">Rock</MudSelectItem>
+            <MudSelectItem Value="@("bug")">Bug</MudSelectItem>
+            <MudSelectItem Value="@("ghost")">Ghost</MudSelectItem>
+            <MudSelectItem Value="@("steel")">Steel</MudSelectItem>
+            <MudSelectItem Value="@("fire")">Fire</MudSelectItem>
+            <MudSelectItem Value="@("water")">Water</MudSelectItem>
+            <MudSelectItem Value="@("grass")">Grass</MudSelectItem>
+            <MudSelectItem Value="@("electric")">Electric</MudSelectItem>
+            <MudSelectItem Value="@("psychic")">Psychic</MudSelectItem>
+            <MudSelectItem Value="@("ice")">Ice</MudSelectItem>
+            <MudSelectItem Value="@("dragon")">Dragon</MudSelectItem>
+            <MudSelectItem Value="@("dark")">Dark</MudSelectItem>
+            <MudSelectItem Value="@("fairy")">Fairy</MudSelectItem>
+            <MudSelectItem Value="@("stellar")">Stellar</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    <MudItem Class="py-0" xs="12" sm="5">
+        <MudSelect T="string" Label="Filter by generation" MultiSelection="true" @bind-SelectedValues="selectedGen">
+            <MudSelectItem Value="@("xxx")">Gen 1</MudSelectItem>
+            <MudSelectItem Value="@("xxx")">Gen 2</MudSelectItem>
+            <MudSelectItem Value="@("xxx")">Gen 3</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="12" sm="2" Class="d-flex py-0 justify-end">
+        <MudText Typo="Typo.body2" Class="d-inline-block align-self-end">View:</MudText>
+        <MudIconButton Size="Size.Small" Icon="@(CardListViewButtonIcon)" Color="Color.Inherit" OnClick="@(() => isCardView = !isCardView)" Class="d-inline-block align-self-end" />
+    </MudItem>
+</MudGrid>
+@if(isCardView)
+{
+    <MudGrid>
+        <Virtualize Items="@(searchedPokemons.Any() ? searchedPokemons : filteredPokemons)" Context="context">
+            <MudItem xs="12" sm="6" md="4" lg="3" xl="2">
+                <MudCard>
+                    <MudCardMedia Image="@context.BildUrl" />
+                    <MudCardContent Class="d-flex justify-between">
+                        <MudText Typo="Typo.h6">@context.Name</MudText>
+                        <MudText Typo="Typo.h6" Class="ml-auto">@($"#{context.Id}")</MudText>
+                    </MudCardContent>
+                    <MudCardActions Class="pl-4 pb-4">
+                        <MudButton Class="@($"rounded-pill {context.Primärtyp.ToLower()}")" Variant="Variant.Filled">@context.Primärtyp</MudButton>
+                        @if(!string.IsNullOrEmpty(context.Sekundärtyp))
+                        {
+                            <MudButton Class="@($"rounded-pill ml-5 {context.Sekundärtyp.ToLower()}")" Variant="Variant.Filled">@context.Sekundärtyp</MudButton>
+                        }
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        </Virtualize>
+    </MudGrid>
+}
+else
+{
+    <MudDataGrid T="PokemonModel" Items="@(searchedPokemons.Any() ? searchedPokemons : filteredPokemons)" Bordered="true">
+        <Columns>
+            <PropertyColumn Property="x => x.Id" Title="Id" />
+            <PropertyColumn Property="x => x.Name" Title="Name" />
+            <PropertyColumn Property="x => x.Primärtyp" Title="Primärtyp" />
+            <PropertyColumn Property="x => x.Sekundärtyp" Title="Sekundärtyp" />
+            <PropertyColumn Property="x => x.Habitat" Title="Habitat" />
+            <PropertyColumn Property="x => x.Hauptfähigkeit" Title="Hauptfähigkeit" />
+            <PropertyColumn Property="x => x.VersteckteFähigkeit" Title="Versteckte Fähigkeit" />
+            <PropertyColumn Property="x => x.KP" Title="KP" />
+            <PropertyColumn Property="x => x.HP" Title="HP" />
+            <PropertyColumn Property="x => x.Angriff" Title="Angriff" />
+            <PropertyColumn Property="x => x.Verteidigung" Title="Verteidigung" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="PokemonModel" />
+        </PagerContent>
+    </MudDataGrid>
+}
+
+@code {
+    private IEnumerable<string> selectedTypes = new List<string>();
+    private IEnumerable<string> selectedGen = new List<string>();
+    private string searchString = string.Empty;
+
+    private List<PokemonModel> pokemons = [];
+    private List<PokemonModel> filteredPokemons = [];
+    private List<PokemonModel> searchedPokemons = [];
+
+    private bool isCardView = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        pokemons = await PokemonService.GetPokemonsDetailsAsync(12);
+        filteredPokemons = pokemons;
+    }
+
+    public string CardListViewButtonIcon => isCardView switch
+    {
+        true => Icons.Material.Filled.Dashboard,
+        false => Icons.Material.Filled.ViewList
+    };
+
+    public void FilterByType()
+    {
+        if(selectedTypes.Count() == 0)
+        {
+            filteredPokemons = pokemons;
+        }
+        else
+        {
+            filteredPokemons = pokemons.Where(p => selectedTypes.Contains(p.Primärtyp) || selectedTypes.Contains(p.Sekundärtyp)).ToList();
+        }
+    }
+
+    private async Task<IEnumerable<string>> SearchPokemon(string value, CancellationToken token)
+    {
+        if(string.IsNullOrEmpty(value))
+        {
+            searchedPokemons = [];
+            StateHasChanged();
+            return new string[0];
+        }
+
+        searchedPokemons = pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase) || x.Id == value.PadLeft(4, '0') || x.Id == value).ToList();
+        StateHasChanged();
+        return pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name);
+    }
+
+}

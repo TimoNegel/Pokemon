@@ -1,0 +1,189 @@
+﻿.normal {
+    background-color: #A8A77A !important;
+    color: white !important;
+}
+
+    .normal:hover {
+        background-color: #A8A77A !important;
+        color: white !important;
+    }
+
+.fighting {
+    background-color: #C22E28 !important;
+    color: white !important;
+}
+
+    .fighting:hover {
+        background-color: #C22E28 !important;
+        color: white !important;
+    }
+
+.flying {
+    background-color: #A98FF3 !important;
+    color: white !important;
+}
+
+    .flying:hover {
+        background-color: #A98FF3 !important;
+        color: white !important;
+    }
+
+.poison {
+    background-color: #A33EA1 !important;
+    color: white !important;
+}
+
+    .poison:hover {
+        background-color: #A33EA1 !important;
+        color: white !important;
+    }
+
+.ground {
+    background-color: #E2BF65 !important;
+    color: white !important;
+}
+
+    .ground:hover {
+        background-color: #E2BF65 !important;
+        color: white !important;
+    }
+
+.rock {
+    background-color: #B6A136 !important;
+    color: white !important;
+}
+
+    .rock:hover {
+        background-color: #B6A136 !important;
+        color: white !important;
+    }
+
+.bug {
+    background-color: #A6B91A !important;
+    color: white !important;
+}
+
+    .bug:hover {
+        background-color: #A6B91A !important;
+        color: white !important;
+    }
+
+.ghost {
+    background-color: #735797 !important;
+    color: white !important;
+}
+
+    .ghost:hover {
+        background-color: #735797 !important;
+        color: white !important;
+    }
+
+.steel {
+    background-color: #B7B7CE !important;
+    color: white !important;
+}
+
+    .steel:hover {
+        background-color: #B7B7CE !important;
+        color: white !important;
+    }
+
+.fire {
+    background-color: #EE8130 !important;
+    color: white !important;
+}
+
+    .fire:hover {
+        background-color: #EE8130 !important;
+        color: white !important;
+    }
+
+.water {
+    background-color: #6390F0 !important;
+    color: white !important;
+}
+
+    .water:hover {
+        background-color: #6390F0 !important;
+        color: white !important;
+    }
+
+.grass {
+    background-color: #7AC74C !important;
+    color: white !important;
+}
+
+    .grass:hover {
+        background-color: #7AC74C !important;
+        color: white !important;
+    }
+
+.electric {
+    background-color: #F7D02C !important;
+    color: white !important;
+}
+
+    .electric:hover {
+        background-color: #F7D02C !important;
+        color: white !important;
+    }
+
+.psychic {
+    background-color: #F95587 !important;
+    color: white !important;
+}
+
+    .psychic:hover {
+        background-color: #F95587 !important;
+        color: white !important;
+    }
+
+.ice {
+    background-color: #96D9D6 !important;
+    color: white !important;
+}
+
+    .ice:hover {
+        background-color: #96D9D6 !important;
+        color: white !important;
+    }
+
+.dragon {
+    background-color: #6F35FC !important;
+    color: white !important;
+}
+
+    .dragon:hover {
+        background-color: #6F35FC !important;
+        color: white !important;
+    }
+
+.dark {
+    background-color: #705746 !important;
+    color: white !important;
+}
+
+    .dark:hover {
+        background-color: #705746 !important;
+        color: white !important;
+    }
+
+.fairy {
+    background-color: #D685AD !important;
+    color: white !important;
+}
+
+    .fairy:hover {
+        background-color: #D685AD !important;
+        color: white !important;
+    }
+
+.stellar {
+    background-color: #FFD700 !important;
+    color: white !important;
+}
+
+    .stellar:hover {
+        background-color: #FFD700 !important;
+        color: white !important;
+    }
