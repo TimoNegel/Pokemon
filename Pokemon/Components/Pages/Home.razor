@@ -3,8 +3,7 @@
     .searchBar {
         width: 300px !important;
         background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 25px !important;
-    }
+        border-radius: 25px !important; }
 
     .mud-input.mud-input-filled {
         background-color: transparent !important;
@@ -18,25 +17,25 @@
 <MudGrid Class="py-4">
     <MudItem Class="py-0" xs="12" sm="5">
         <MudSelect T="string" Label="Filter by types" MultiSelection="true" ValueChanged="FilterByType" @bind-SelectedValues="selectedTypes">
-            <MudSelectItem Value="@("normal")">Normal</MudSelectItem>
-            <MudSelectItem Value="@("fighting")">Fighting</MudSelectItem>
-            <MudSelectItem Value="@("flying")">Flying</MudSelectItem>
-            <MudSelectItem Value="@("poison")">Poison</MudSelectItem>
-            <MudSelectItem Value="@("ground")">Ground</MudSelectItem>
-            <MudSelectItem Value="@("rock")">Rock</MudSelectItem>
-            <MudSelectItem Value="@("bug")">Bug</MudSelectItem>
-            <MudSelectItem Value="@("ghost")">Ghost</MudSelectItem>
-            <MudSelectItem Value="@("steel")">Steel</MudSelectItem>
-            <MudSelectItem Value="@("fire")">Fire</MudSelectItem>
-            <MudSelectItem Value="@("water")">Water</MudSelectItem>
-            <MudSelectItem Value="@("grass")">Grass</MudSelectItem>
-            <MudSelectItem Value="@("electric")">Electric</MudSelectItem>
-            <MudSelectItem Value="@("psychic")">Psychic</MudSelectItem>
-            <MudSelectItem Value="@("ice")">Ice</MudSelectItem>
-            <MudSelectItem Value="@("dragon")">Dragon</MudSelectItem>
-            <MudSelectItem Value="@("dark")">Dark</MudSelectItem>
-            <MudSelectItem Value="@("fairy")">Fairy</MudSelectItem>
-            <MudSelectItem Value="@("stellar")">Stellar</MudSelectItem>
+            <MudSelectItem Value="@("Normal")">Normal</MudSelectItem>
+            <MudSelectItem Value="@("Fighting")">Fighting</MudSelectItem>
+            <MudSelectItem Value="@("Flying")">Flying</MudSelectItem>
+            <MudSelectItem Value="@("Poison")">Poison</MudSelectItem>
+            <MudSelectItem Value="@("Ground")">Ground</MudSelectItem>
+            <MudSelectItem Value="@("Rock")">Rock</MudSelectItem>
+            <MudSelectItem Value="@("Bug")">Bug</MudSelectItem>
+            <MudSelectItem Value="@("Ghost")">Ghost</MudSelectItem>
+            <MudSelectItem Value="@("Steel")">Steel</MudSelectItem>
+            <MudSelectItem Value="@("Fire")">Fire</MudSelectItem>
+            <MudSelectItem Value="@("Water")">Water</MudSelectItem>
+            <MudSelectItem Value="@("Grass")">Grass</MudSelectItem>
+            <MudSelectItem Value="@("Electric")">Electric</MudSelectItem>
+            <MudSelectItem Value="@("Psychic")">Psychic</MudSelectItem>
+            <MudSelectItem Value="@("Ice")">Ice</MudSelectItem>
+            <MudSelectItem Value="@("Dragon")">Dragon</MudSelectItem>
+            <MudSelectItem Value="@("Dark")">Dark</MudSelectItem>
+            <MudSelectItem Value="@("Fairy")">Fairy</MudSelectItem>
+            <MudSelectItem Value="@("Stellar")">Stellar</MudSelectItem>
         </MudSelect>
     </MudItem>
     <MudItem Class="py-0" xs="12" sm="5">
@@ -51,7 +50,7 @@
         <MudIconButton Size="Size.Small" Icon="@(CardListViewButtonIcon)" Color="Color.Inherit" OnClick="@(() => isCardView = !isCardView)" Class="d-inline-block align-self-end" />
     </MudItem>
 </MudGrid>
-@if(isCardView)
+@if (isCardView)
 {
     <MudGrid>
         <Virtualize Items="@(searchedPokemons.Any() ? searchedPokemons : filteredPokemons)" Context="context">
@@ -59,12 +58,12 @@
                 <MudCard>
                     <MudCardMedia Image="@context.BildUrl" />
                     <MudCardContent Class="d-flex justify-between">
-                        <MudText Typo="Typo.h6">@context.Name</MudText>
-                        <MudText Typo="Typo.h6" Class="ml-auto">@($"#{context.Id}")</MudText>
+                       <MudText Typo="Typo.h6">@context.Name</MudText>
+                       <MudText Typo="Typo.h6" Class="ml-auto">@($"#{context.Id}")</MudText>
                     </MudCardContent>
                     <MudCardActions Class="pl-4 pb-4">
                         <MudButton Class="@($"rounded-pill {context.Primärtyp.ToLower()}")" Variant="Variant.Filled">@context.Primärtyp</MudButton>
-                        @if(!string.IsNullOrEmpty(context.Sekundärtyp))
+                        @if (!string.IsNullOrEmpty(context.Sekundärtyp))
                         {
                             <MudButton Class="@($"rounded-pill ml-5 {context.Sekundärtyp.ToLower()}")" Variant="Variant.Filled">@context.Sekundärtyp</MudButton>
                         }
@@ -121,7 +120,7 @@ else
 
     public void FilterByType()
     {
-        if(selectedTypes.Count() == 0)
+        if (selectedTypes.Count() == 0)
         {
             filteredPokemons = pokemons;
         }
@@ -133,7 +132,7 @@ else
 
     private async Task<IEnumerable<string>> SearchPokemon(string value, CancellationToken token)
     {
-        if(string.IsNullOrEmpty(value))
+        if (string.IsNullOrEmpty(value))
         {
             searchedPokemons = [];
             StateHasChanged();
