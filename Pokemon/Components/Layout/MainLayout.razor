@@ -8,15 +8,16 @@
     <MudAppBar Elevation="1">
         <MudStaticNavDrawerToggle DrawerId="nav-drawer" Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
         <MudSpacer />
+        <SearchBar/>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
     </MudAppBar>
     <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
     </MudDrawer>
-    <MudMainContent  Class="pt-20 pa-4">
+    <MudMainContent Class="pt-20 pa-4">
         <MudContainer Class="pa-0" MaxWidth="MaxWidth.ExtraLarge">
             @Body
-        </MudContainer> 
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 
@@ -31,6 +32,7 @@
     private bool _drawerOpen = false;
     private bool _isDarkMode = false;
     private MudTheme? _theme = null;
+
 
     protected override void OnInitialized()
     {
@@ -62,16 +64,11 @@
 
     private readonly PaletteLight _lightPalette = new()
     {
-        
+
     };
 
     private readonly PaletteDark _darkPalette = new()
-        {
+    {
 
-        };
+    };
 }
-
-
-
-
-

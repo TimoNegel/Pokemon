@@ -4,7 +4,7 @@
     {
         public static string CapitalizeFirstLetter(this string input)
         {
-            if(string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
                 return input;
             }

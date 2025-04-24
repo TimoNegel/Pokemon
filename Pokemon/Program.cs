@@ -38,8 +38,12 @@ var connectionString =
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)
 );
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddDbContextFactory<ApplicationDbContext>(
+    options => options.UseLazyLoadingProxies().UseSqlServer(connectionString),
+    ServiceLifetime.Scoped
+);
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder
     .Services.AddIdentityCore<ApplicationUserModel>(options =>
         options.SignIn.RequireConfirmedAccount = true
@@ -54,12 +58,13 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUserModel>, IdentityNoOpEm
 builder.Services.AddHttpClient();
 
 // Add coustom services
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<PokemonService>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
 }

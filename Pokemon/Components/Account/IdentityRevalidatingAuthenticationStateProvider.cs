@@ -1,9 +1,9 @@
+using System.Security.Claims;
 using Backend.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
 
 namespace Pokemon.Components.Account
 {
@@ -36,11 +36,11 @@ namespace Pokemon.Components.Account
         )
         {
             var user = await userManager.GetUserAsync(principal);
-            if(user is null)
+            if (user is null)
             {
                 return false;
             }
-            else if(!userManager.SupportsUserSecurityStamp)
+            else if (!userManager.SupportsUserSecurityStamp)
             {
                 return true;
             }
