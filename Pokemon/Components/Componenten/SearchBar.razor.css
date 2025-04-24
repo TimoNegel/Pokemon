@@ -1,0 +1,27 @@
+﻿.searchBar {
+    width: 300px !important;
+    height: 40px !important;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 25px !important;
+    margin-right: 20px !important;
+}
+
+::deep .mud-input.mud-input-filled {
+    background-color: transparent !important;
+}
+
+::deep .mud-input.mud-input-underline:after {
+    border-bottom: none !important;
+}
+
+::deep .mud-input-root-filled {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    padding-top: 11px !important;
+    padding-bottom: 10px !important;
+}
+
+::deep .mud-select {
+    flex-grow: 0;
+}
+

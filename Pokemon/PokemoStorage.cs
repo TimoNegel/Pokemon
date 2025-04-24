@@ -1,6 +1,6 @@
 ﻿using Backend.Models;
 
-namespace Pokemon.Components
+namespace Pokemon
 {
     public static class PokemoStorage
     {

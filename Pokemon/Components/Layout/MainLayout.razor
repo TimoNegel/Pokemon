@@ -1,34 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-<style>
-    .searchBar {
-        width: 300px !important;
-        height: 40px !important;
-        background-color: rgba(255, 255, 255, 0.5);
-        border-radius: 25px !important;
-        margin-right: 20px !important;
-    }
-
-    .mud-input.mud-input-filled {
-        background-color: transparent !important;
-    }
-
-    .mud-input.mud-input-underline:after {
-        border-bottom: none !important;
-    }
-
-    .mud-input-root-filled {
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        padding-top: 11px !important;
-        padding-bottom: 10px !important;
-    }
-
-    .mud-select {
-        flex-grow: 0;
-    }
-</style>
-
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
@@ -37,7 +8,7 @@
     <MudAppBar Elevation="1">
         <MudStaticNavDrawerToggle DrawerId="nav-drawer" Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
         <MudSpacer />
-        <MudAutocomplete class="searchBar" Variant="Variant.Filled" T="string" Placeholder="Pokemon nach ID oder Name suchen" SearchFunc="@SearchPokemon" ResetValueOnEmptyText="true" CoerceText="true" CoerceValue="@true" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+        <SearchBar/>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
     </MudAppBar>
     <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
@@ -100,17 +71,4 @@
     {
 
     };
-
-    private async Task<IEnumerable<string>> SearchPokemon(string value, CancellationToken token)
-    {
-        if(string.IsNullOrEmpty(value))
-        {
-            PokemoStorage.SearchedPokemons = [];
-            StateHasChanged();
-            return new string[0];
-        }
-
-        PokemoStorage.SearchedPokemons = PokemoStorage.pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase) || x.Id == value.PadLeft(4, '0') || x.Id == value).ToList();
-        return PokemoStorage.pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name);
-    }
 }
