@@ -1,17 +1,18 @@
 ﻿ @using MudBlazor
+@using System.Globalization
 
- <style>
-     .elevation{
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        background-color: rgba(254, 254, 254, 0.5);
-        padding: 12px;
+<style>
+    .elevation{
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: rgba(254, 254, 254, 0.5);
+    padding: 12px;
     }
 
-     .spacing{
-         margin: 6px;
-     }
+    .spacing{
+    margin: 6px;
+    }
 
- </style>
+</style>
 
 <MudDialog>
     <DialogContent>
@@ -21,22 +22,22 @@
             <MudImage Height="200" Src="@Pokemon.BildUrl"></MudImage>
             <MudText Typo="Typo.h4">@Pokemon.Name</MudText>
             <MudContainer Class="pa-0 mb-4 d-flex justify-end">
-                <MudIcon Icon="@Icons.Material.Filled.Male"></MudIcon>   @* Dummy Data *@
+                <MudIcon Icon="@(Pokemon.Geschlecht == 1 ? Icons.Material.Filled.Male : Pokemon.Geschlecht == 8 ? Icons.Material.Filled.Female : "")"></MudIcon>
             </MudContainer>
-            
+
             <MudGrid>
                 <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudText Typo="Typo.h6">8,6kg</MudText>
+                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals(Pokemon.Gewicht * 100 / 1000)) KG</MudText>
                     <MudText Class="mt-1">Gewicht</MudText>
                 </MudItem>
                 <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudAvatar Color="Color.Primary" Variant="Variant.Filled"> @* Dummy Data *@
+                    <MudAvatar Class="@Pokemon.Primärtyp.ToLower()" Variant="Variant.Filled">
                         <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
                     </MudAvatar>
-                    <MudText Class="mt-1">Feuer</MudText> @* Dummy Data *@
+                    <MudText Class="mt-1">@Pokemon.Primärtyp</MudText>
                 </MudItem>
                 <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudText Typo="Typo.h6">8,6kg</MudText>@* Dummy Data *@
+                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals(Pokemon.Groesse * 100 / 10)) M</MudText>
                     <MudText Class="mt-1">Größe</MudText>
                 </MudItem>
             </MudGrid>
@@ -46,8 +47,8 @@
             <MudTabs Centered="true">
                 <MudTabPanel Text="Info">
                     <MudContainer Class="mt-7 pa-0">
-                        <MudText Typo="Typo.h5">Echsen-Pokemon</MudText> @* Dummy Data *@
-                        <MudText Class="mt-2">Lorembfjhbfljb jfhqjhfjq qhflqh fkjqhfklq qkhfqhfkqhfkqwhfkfashfqwf h felkqhkfqweh fqhflkjwqhf lkqwhfklqhfkqh kflh kfqh kljqh kjlqhwkjfhqkjfqhhqkjfhqkhfq hfkhf lkhqflkjhflkqhfkljhewljwqehfkjqewhfkljhwekjwehfkjfhlfe ke f efe whlkhfekhefwkh e</MudText> @* Dummy Data *@
+                        <MudText Typo="Typo.h5">@Pokemon.Art</MudText> 
+                        <MudText Class="mt-2">@Pokemon.Beschreibung</MudText>
                     </MudContainer>
                     <MudDivider Class="mt-4 mb-2" />
                     <MudContainer Class="mt-7 pa-0">
@@ -61,70 +62,37 @@
                     <MudGrid Spacing="0"  Class="mt-7">
                         <MudText  Typo="Typo.body1" Align="Align.Start">TYPENEFFEKTIVITÄT</MudText>
                         <MudItem Class="d-flex justify-center align-center elevation mt-1" xs="12">
-                            <MudAvatar Class="ma-2" Color="Color.Primary" Variant="Variant.Filled">
-                                @* Dummy Data *@
+                            <MudAvatar  Class="@($"ma-2 {Pokemon.Primärtyp.ToLower()}")" Variant="Variant.Filled">
                                 <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
                             </MudAvatar>
-                            <MudText >Feuer</MudText> @* Dummy Data *@
+                            <MudText>@Pokemon.Primärtyp</MudText>
                         </MudItem>
 
                         <MudItem Class="d-flex flex-column align-self-start elevation" xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Center">RESISTENZ GEGEN</MudText>
                             <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
+                                @foreach(string resistenz in Pokemon.ResistenzGegen)
+                                {
+                                    <MudAvatar Class="@($"ma-1 {resistenz.ToLower()}")"  Variant="Variant.Filled">
+                                        <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                                    </MudAvatar>
+                                }
                             </MudContainer>
                         </MudItem>
 
                         <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Center">SCHWÄCHE GEGEN</MudText>
                             <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
-                                <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
-                                    @* Dummy Data *@
-                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                                </MudAvatar>
+                                @foreach(string schwäche in Pokemon.SchwächeGegen)
+                                {
+                                    <MudAvatar Class="@($"ma-1 {schwäche.ToLower()}")" Variant="Variant.Filled">
+                                        <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                                    </MudAvatar>
+                                }
                             </MudContainer>
                         </MudItem>
                     </MudGrid>
-                    
+
 
                     <MudGrid Spacing="0" Class="mt-7 elevation">
                         <MudItem xs="6">
@@ -134,7 +102,7 @@
                             <MudText Typo="Typo.body1" Align="Align.End">SCHADEN</MudText>
                         </MudItem>
                         <MudItem Class="d-flex align-center" xs="6">
-                            <MudAvatar Class="ma-2" Color="Color.Primary" Variant="Variant.Filled">
+                            <MudAvatar Class="ma-2" Variant="Variant.Filled">
                                 @* Dummy Data *@
                                 <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
                             </MudAvatar>
@@ -153,7 +121,7 @@
                             <MudText Align="Align.End">SCHADEN</MudText>
                         </MudItem>
                         <MudItem Class="d-flex  align-center" xs="6">
-                            <MudAvatar Class="ma-2" Color="Color.Primary" Variant="Variant.Filled">
+                            <MudAvatar Class="ma-2" Variant="Variant.Filled">
                                 @* Dummy Data *@
                                 <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
                             </MudAvatar>
@@ -172,4 +140,9 @@
 @code {
     [Parameter]
     public PokemonModel Pokemon { get; set; } = new PokemonModel();
+
+    public decimal ConvertTo2Dezimals(int zahl)
+    {
+        return Math.Round(Convert.ToDecimal(zahl), 2, MidpointRounding.AwayFromZero);
+    }
 }
