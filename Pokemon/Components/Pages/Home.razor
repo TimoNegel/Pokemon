@@ -52,7 +52,7 @@
             <MudItem xs="12" sm="6" md="4" lg="3" xl="2" @key="model.Id">
                 <MudCard @onclick="(()=>
                     ShowPokemon(model))">
-                    <MudCardMedia Image="@model.BildUrl" />
+                    <MudCardMedia Style="image-rendering: pixelated;" Image="@model.BildUrl" />
                     <MudCardContent Class="d-flex justify-between">
                         <MudText Typo="Typo.h6">@model.Name</MudText>
                         <MudText Typo="Typo.h6" Class="ml-auto">@($"#{model.Id}")</MudText>

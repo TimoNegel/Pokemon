@@ -1,5 +1,18 @@
 ﻿ @using MudBlazor
 
+ <style>
+     .elevation{
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        background-color: rgba(254, 254, 254, 0.5);
+        padding: 12px;
+    }
+
+     .spacing{
+         margin: 6px;
+     }
+
+ </style>
+
 <MudDialog>
     <DialogContent>
 
@@ -30,14 +43,14 @@
 
             <MudDivider Class="mt-4 mb-2" />
 
-            <MudTabs Centered="true" PanelClass="pa-6">
+            <MudTabs Centered="true">
                 <MudTabPanel Text="Info">
-                    <MudContainer>
+                    <MudContainer Class="mt-7 pa-0">
                         <MudText Typo="Typo.h5">Echsen-Pokemon</MudText> @* Dummy Data *@
                         <MudText Class="mt-2">Lorembfjhbfljb jfhqjhfjq qhflqh fkjqhfklq qkhfqhfkqhfkqwhfkfashfqwf h felkqhkfqweh fqhflkjwqhf lkqwhfklqhfkqh kflh kfqh kljqh kjlqhwkjfhqkjfqhhqkjfhqkhfq hfkhf lkhqflkjhflkqhfkljhewljwqehfkjqewhfkljhwekjwehfkjfhlfe ke f efe whlkhfekhefwkh e</MudText> @* Dummy Data *@
                     </MudContainer>
                     <MudDivider Class="mt-4 mb-2" />
-                    <MudContainer>
+                    <MudContainer Class="mt-7 pa-0">
                         <MudText Typo="Typo.h5">Entwicklung</MudText> 
                         <MudText>Hier werden alle entwicklungen angezeigt </MudText> @* Dummy Data *@
                     </MudContainer>
@@ -45,9 +58,9 @@
 
                 <MudTabPanel Text="Kampf">
 
-                    <MudGrid Class="mt-7" Spacing="5">
+                    <MudGrid Spacing="0"  Class="mt-7">
                         <MudText  Typo="Typo.body1" Align="Align.Start">TYPENEFFEKTIVITÄT</MudText>
-                        <MudItem Class="d-flex justify-center align-center" xs="12">
+                        <MudItem Class="d-flex justify-center align-center elevation mt-1" xs="12">
                             <MudAvatar Class="ma-2" Color="Color.Primary" Variant="Variant.Filled">
                                 @* Dummy Data *@
                                 <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
@@ -55,7 +68,7 @@
                             <MudText >Feuer</MudText> @* Dummy Data *@
                         </MudItem>
 
-                        <MudItem Class="d-flex flex-column align-self-start " xs="6">
+                        <MudItem Class="d-flex flex-column align-self-start elevation" xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Center">RESISTENZ GEGEN</MudText>
                             <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
                                 <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
@@ -93,7 +106,7 @@
                             </MudContainer>
                         </MudItem>
 
-                        <MudItem Class="d-flex flex-column align-self-start" xs="6">
+                        <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Center">SCHWÄCHE GEGEN</MudText>
                             <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
                                 <MudAvatar Class="ma-1" Color="Color.Primary" Variant="Variant.Filled">
@@ -113,26 +126,26 @@
                     </MudGrid>
                     
 
-                    <MudGrid Spacing="5" Class="mt-7">
+                    <MudGrid Spacing="0" Class="mt-7 elevation">
                         <MudItem xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Start">SOFORT-ATTACKE</MudText>
                         </MudItem>
-                        <MudItem xs="6" Typo="Typo.body1">
-                            <MudText Align="Align.End">SCHADEN</MudText>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.body1" Align="Align.End">SCHADEN</MudText>
                         </MudItem>
-                        <MudItem Class="d-flex  align-center" xs="6">
+                        <MudItem Class="d-flex align-center" xs="6">
                             <MudAvatar Class="ma-2" Color="Color.Primary" Variant="Variant.Filled">
                                 @* Dummy Data *@
                                 <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
                             </MudAvatar>
                             <MudText>Glut</MudText> @* Dummy Data *@
                         </MudItem>
-                        <MudItem xs="6">
-                            <MudText Align="Align.End">10</MudText> @* Dummy Data *@
+                        <MudItem Class="d-flex align-self-center justify-end" xs="6">
+                            <MudText>10</MudText> @* Dummy Data *@
                         </MudItem>
                     </MudGrid>
 
-                    <MudGrid Spacing="5" Class="mt-7">
+                    <MudGrid Spacing="0" Class="mt-7 elevation">
                         <MudItem xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Start">LADE-ATTACKE</MudText>
                         </MudItem>
@@ -146,8 +159,8 @@
                             </MudAvatar>
                             <MudText>Nitroladung</MudText> @* Dummy Data *@
                         </MudItem>
-                        <MudItem xs="6">
-                            <MudText Align="Align.End">60</MudText> @* Dummy Data *@
+                        <MudItem Class="d-flex align-self-center justify-end" xs="6">
+                            <MudText>60</MudText> @* Dummy Data *@
                         </MudItem>
                     </MudGrid>
                 </MudTabPanel>
