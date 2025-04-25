@@ -1,5 +1,11 @@
 ﻿@page "/"
 
+<style>
+    .blur-background {
+        backdrop-filter: blur(10px);
+    }
+</style>
+
 <PageTitle>Dashboard</PageTitle>
 
 <MudGrid Class="py-4">
@@ -44,7 +50,8 @@
         @foreach(PokemonModel model in (PokemoStorage.SearchedPokemons.Any() ? PokemoStorage.SearchedPokemons : filteredPokemons))
         {
             <MudItem xs="12" sm="6" md="4" lg="3" xl="2" @key="model.Id">
-                <MudCard>
+                <MudCard @onclick="(()=>
+                    ShowPokemon(model))">
                     <MudCardMedia Image="@model.BildUrl" />
                     <MudCardContent Class="d-flex justify-between">
                         <MudText Typo="Typo.h6">@model.Name</MudText>
@@ -96,13 +103,31 @@ else
     {
         PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
         PokemoStorage.pokemons = [];
-        // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert 
+        // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert
         await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(386))
         {
             PokemoStorage.pokemons.Add(pokemon);
             filteredPokemons = PokemoStorage.pokemons;
             StateHasChanged();
         }
+    }
+
+    private void ShowPokemon(PokemonModel pokemon)
+    {
+        var options = new DialogOptions()
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            BackgroundClass = "blur-background",
+        };
+
+        var parameters = new DialogParameters
+        {
+            { "Pokemon", pokemon }
+        };
+
+        DialogService.ShowAsync<PokemonInformatiom>("", parameters, options);
     }
 
     public string CardListViewButtonIcon => isCardView switch
@@ -113,7 +138,7 @@ else
 
     public void FilterByType()
     {
-        if (selectedTypes.Count() == 0)
+        if(selectedTypes.Count() == 0)
         {
             filteredPokemons = PokemoStorage.pokemons;
         }
