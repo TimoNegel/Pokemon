@@ -1,189 +1,189 @@
 ﻿.normal {
-    background-color: #A8A77A !important;
+    background-color: #A0A29F !important;
     color: white !important;
 }
 
     .normal:hover {
-        background-color: #A8A77A !important;
+        background-color: #A0A29F !important;
         color: white !important;
     }
 
 .fighting {
-    background-color: #C22E28 !important;
+    background-color: #D3425F !important;
     color: white !important;
 }
 
     .fighting:hover {
-        background-color: #C22E28 !important;
+        background-color: #D3425F !important;
         color: white !important;
     }
 
 .flying {
-    background-color: #A98FF3 !important;
+    background-color: #A1BBEC !important;
     color: white !important;
 }
 
     .flying:hover {
-        background-color: #A98FF3 !important;
+        background-color: #A1BBEC !important;
         color: white !important;
     }
 
 .poison {
-    background-color: #A33EA1 !important;
+    background-color: #B763CF !important;
     color: white !important;
 }
 
     .poison:hover {
-        background-color: #A33EA1 !important;
+        background-color: #B763CF !important;
         color: white !important;
     }
 
 .ground {
-    background-color: #E2BF65 !important;
+    background-color: #DA7C4D !important;
     color: white !important;
 }
 
     .ground:hover {
-        background-color: #E2BF65 !important;
+        background-color: #DA7C4D !important;
         color: white !important;
     }
 
 .rock {
-    background-color: #B6A136 !important;
+    background-color: #C9BB8A !important;
     color: white !important;
 }
 
     .rock:hover {
-        background-color: #B6A136 !important;
+        background-color: #C9BB8A !important;
         color: white !important;
     }
 
 .bug {
-    background-color: #A6B91A !important;
+    background-color: #92BC2C !important;
     color: white !important;
 }
 
     .bug:hover {
-        background-color: #A6B91A !important;
+        background-color: #92BC2C !important;
         color: white !important;
     }
 
 .ghost {
-    background-color: #735797 !important;
+    background-color: #5F6DBC !important;
     color: white !important;
 }
 
     .ghost:hover {
-        background-color: #735797 !important;
+        background-color: #5F6DBC !important;
         color: white !important;
     }
 
 .steel {
-    background-color: #B7B7CE !important;
+    background-color: #5695A3 !important;
     color: white !important;
 }
 
     .steel:hover {
-        background-color: #B7B7CE !important;
+        background-color: #5695A3 !important;
         color: white !important;
     }
 
 .fire {
-    background-color: #EE8130 !important;
+    background-color: #FBA54C !important;
     color: white !important;
 }
 
     .fire:hover {
-        background-color: #EE8130 !important;
+        background-color: #FBA54C !important;
         color: white !important;
     }
 
 .water {
-    background-color: #6390F0 !important;
+    background-color: #539DDF !important;
     color: white !important;
 }
 
     .water:hover {
-        background-color: #6390F0 !important;
+        background-color: #539DDF !important;
         color: white !important;
     }
 
 .grass {
-    background-color: #7AC74C !important;
+    background-color: #5FBD58 !important;
     color: white !important;
 }
 
     .grass:hover {
-        background-color: #7AC74C !important;
+        background-color: #5FBD58 !important;
         color: white !important;
     }
 
 .electric {
-    background-color: #F7D02C !important;
+    background-color: #F2D94E !important;
     color: white !important;
 }
 
     .electric:hover {
-        background-color: #F7D02C !important;
+        background-color: #F2D94E !important;
         color: white !important;
     }
 
 .psychic {
-    background-color: #F95587 !important;
+    background-color: #FA8581 !important;
     color: white !important;
 }
 
     .psychic:hover {
-        background-color: #F95587 !important;
+        background-color: #FA8581 !important;
         color: white !important;
     }
 
 .ice {
-    background-color: #96D9D6 !important;
+    background-color: #75D0C1 !important;
     color: white !important;
 }
 
     .ice:hover {
-        background-color: #96D9D6 !important;
+        background-color: #75D0C1 !important;
         color: white !important;
     }
 
 .dragon {
-    background-color: #6F35FC !important;
+    background-color: #0C69C8 !important;
     color: white !important;
 }
 
     .dragon:hover {
-        background-color: #6F35FC !important;
+        background-color: #0C69C8 !important;
         color: white !important;
     }
 
 .dark {
-    background-color: #705746 !important;
+    background-color: #595761 !important;
     color: white !important;
 }
 
     .dark:hover {
-        background-color: #705746 !important;
+        background-color: #595761 !important;
         color: white !important;
     }
 
 .fairy {
-    background-color: #D685AD !important;
+    background-color: #EE90E6 !important;
     color: white !important;
 }
 
     .fairy:hover {
-        background-color: #D685AD !important;
+        background-color: #EE90E6 !important;
         color: white !important;
     }
 
 .stellar {
-    background-color: #FFD700 !important;
+    background: linear-gradient(to right,     blue,     green,     yellow,     orange,     red,     pink,     purple) !important;
     color: white !important;
 }
 
     .stellar:hover {
-        background-color: #FFD700 !important;
+        background: linear-gradient(to right,     blue,     green,     yellow,     orange,     red,     pink,     purple) !important;
         color: white !important;
     }

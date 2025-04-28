@@ -27,17 +27,17 @@
 
             <MudGrid>
                 <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals(Pokemon.Gewicht * 100 / 1000)) KG</MudText>
+                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals((decimal)Pokemon.Gewicht * 100 / 1000)) KG</MudText>
                     <MudText Class="mt-1">Gewicht</MudText>
                 </MudItem>
                 <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
                     <MudAvatar Class="@Pokemon.Primärtyp.ToLower()" Variant="Variant.Filled">
-                        <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                        <MudIcon Icon="@PokemonTypesIcons.GetIcon(Pokemon.Primärtyp)" />
                     </MudAvatar>
                     <MudText Class="mt-1">@Pokemon.Primärtyp</MudText>
                 </MudItem>
                 <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals(Pokemon.Groesse * 100 / 10)) M</MudText>
+                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals((decimal)Pokemon.Groesse / 10)) M</MudText>
                     <MudText Class="mt-1">Größe</MudText>
                 </MudItem>
             </MudGrid>
@@ -63,18 +63,18 @@
                         <MudText  Typo="Typo.body1" Align="Align.Start">TYPENEFFEKTIVITÄT</MudText>
                         <MudItem Class="d-flex justify-center align-center elevation mt-1" xs="12">
                             <MudAvatar  Class="@($"ma-2 {Pokemon.Primärtyp.ToLower()}")" Variant="Variant.Filled">
-                                <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                                <MudIcon Icon="@PokemonTypesIcons.GetIcon(Pokemon.Primärtyp)" />
                             </MudAvatar>
                             <MudText>@Pokemon.Primärtyp</MudText>
                         </MudItem>
 
-                        <MudItem Class="d-flex flex-column align-self-start elevation" xs="6">
+                        <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Center">RESISTENZ GEGEN</MudText>
                             <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
                                 @foreach(string resistenz in Pokemon.ResistenzGegen)
                                 {
                                     <MudAvatar Class="@($"ma-1 {resistenz.ToLower()}")"  Variant="Variant.Filled">
-                                        <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                                        <MudIcon Icon="@PokemonTypesIcons.GetIcon(resistenz)" />
                                     </MudAvatar>
                                 }
                             </MudContainer>
@@ -86,7 +86,7 @@
                                 @foreach(string schwäche in Pokemon.SchwächeGegen)
                                 {
                                     <MudAvatar Class="@($"ma-1 {schwäche.ToLower()}")" Variant="Variant.Filled">
-                                        <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                                        <MudIcon Icon="@PokemonTypesIcons.GetIcon(schwäche)" />
                                     </MudAvatar>
                                 }
                             </MudContainer>
@@ -141,7 +141,7 @@
     [Parameter]
     public PokemonModel Pokemon { get; set; } = new PokemonModel();
 
-    public decimal ConvertTo2Dezimals(int zahl)
+    public decimal ConvertTo2Dezimals(decimal zahl)
     {
         return Math.Round(Convert.ToDecimal(zahl), 2, MidpointRounding.AwayFromZero);
     }
