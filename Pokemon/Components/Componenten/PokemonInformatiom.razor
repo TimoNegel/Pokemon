@@ -2,14 +2,14 @@
 @using System.Globalization
 
 <style>
-    .elevation{
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    background-color: rgba(254, 254, 254, 0.5);
-    padding: 12px;
+    .elevation {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        background-color: rgba(254, 254, 254, 0.5);
+        padding: 12px;
     }
 
-    .spacing{
-    margin: 6px;
+    .spacing {
+        margin: 6px;
     }
 
 </style>
@@ -47,22 +47,22 @@
             <MudTabs Centered="true">
                 <MudTabPanel Text="Info">
                     <MudContainer Class="mt-7 pa-0">
-                        <MudText Typo="Typo.h5">@Pokemon.Art</MudText> 
+                        <MudText Typo="Typo.h5">@Pokemon.Art</MudText>
                         <MudText Class="mt-2">@Pokemon.Beschreibung</MudText>
                     </MudContainer>
                     <MudDivider Class="mt-4 mb-2" />
                     <MudContainer Class="mt-7 pa-0">
-                        <MudText Typo="Typo.h5">Entwicklung</MudText> 
+                        <MudText Typo="Typo.h5">Entwicklung</MudText>
                         <MudText>Hier werden alle entwicklungen angezeigt </MudText> @* Dummy Data *@
                     </MudContainer>
                 </MudTabPanel>
 
                 <MudTabPanel Text="Kampf">
 
-                    <MudGrid Spacing="0"  Class="mt-7">
-                        <MudText  Typo="Typo.body1" Align="Align.Start">TYPENEFFEKTIVITÄT</MudText>
+                    <MudGrid Spacing="0" Class="mt-7">
+                        <MudText Typo="Typo.body1" Align="Align.Start">TYPENEFFEKTIVITÄT</MudText>
                         <MudItem Class="d-flex justify-center align-center elevation mt-1" xs="12">
-                            <MudAvatar  Class="@($"ma-2 {Pokemon.Primärtyp.ToLower()}")" Variant="Variant.Filled">
+                            <MudAvatar Class="@($"ma-2 {Pokemon.Primärtyp.ToLower()}")" Variant="Variant.Filled">
                                 <MudIcon Icon="@PokemonTypesIcons.GetIcon(Pokemon.Primärtyp)" />
                             </MudAvatar>
                             <MudText>@Pokemon.Primärtyp</MudText>
@@ -73,9 +73,11 @@
                             <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
                                 @foreach(string resistenz in Pokemon.ResistenzGegen)
                                 {
-                                    <MudAvatar Class="@($"ma-1 {resistenz.ToLower()}")"  Variant="Variant.Filled">
-                                        <MudIcon Icon="@PokemonTypesIcons.GetIcon(resistenz)" />
-                                    </MudAvatar>
+                                    <MudTooltip Text="@resistenz" class="@resistenz.ToLower()">
+                                        <MudAvatar Class="@($"ma-1 {resistenz.ToLower()}")" Variant="Variant.Filled">
+                                            <MudIcon Icon="@PokemonTypesIcons.GetIcon(resistenz)" />
+                                        </MudAvatar>
+                                    </MudTooltip>
                                 }
                             </MudContainer>
                         </MudItem>
@@ -83,66 +85,68 @@
                         <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
                             <MudText Typo="Typo.body1" Align="Align.Center">SCHWÄCHE GEGEN</MudText>
                             <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
-                                @foreach(string schwäche in Pokemon.SchwächeGegen)
+                                @foreach(string schwaeche in Pokemon.SchwächeGegen)
                                 {
-                                    <MudAvatar Class="@($"ma-1 {schwäche.ToLower()}")" Variant="Variant.Filled">
-                                        <MudIcon Icon="@PokemonTypesIcons.GetIcon(schwäche)" />
-                                    </MudAvatar>
-                                }
-                            </MudContainer>
-                        </MudItem>
-                    </MudGrid>
+                                    <MudTooltip Text="@schwaeche" class="@schwaeche.ToLower()">
+                                        <MudAvatar Class="@($"ma-1 {schwaeche.ToLower()}")" Variant="Variant.Filled">
+                                            <MudIcon Icon="@PokemonTypesIcons.GetIcon(schwaeche)" />
+                                        </MudAvatar>
+                                        </MudTooltip>
+                                        }
+                                </MudContainer>
+                            </MudItem>
+                        </MudGrid>
 
 
-                    <MudGrid Spacing="0" Class="mt-7 elevation">
-                        <MudItem xs="6">
-                            <MudText Typo="Typo.body1" Align="Align.Start">SOFORT-ATTACKE</MudText>
-                        </MudItem>
-                        <MudItem xs="6">
-                            <MudText Typo="Typo.body1" Align="Align.End">SCHADEN</MudText>
-                        </MudItem>
-                        <MudItem Class="d-flex align-center" xs="6">
-                            <MudAvatar Class="ma-2" Variant="Variant.Filled">
-                                @* Dummy Data *@
-                                <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                            </MudAvatar>
-                            <MudText>Glut</MudText> @* Dummy Data *@
-                        </MudItem>
-                        <MudItem Class="d-flex align-self-center justify-end" xs="6">
-                            <MudText>10</MudText> @* Dummy Data *@
-                        </MudItem>
-                    </MudGrid>
+                        <MudGrid Spacing="0" Class="mt-7 elevation">
+                            <MudItem xs="6">
+                                <MudText Typo="Typo.body1" Align="Align.Start">SOFORT-ATTACKE</MudText>
+                            </MudItem>
+                            <MudItem xs="6">
+                                <MudText Typo="Typo.body1" Align="Align.End">SCHADEN</MudText>
+                            </MudItem>
+                            <MudItem Class="d-flex align-center" xs="6">
+                                <MudAvatar Class="ma-2" Variant="Variant.Filled">
+                                                @* Dummy Data *@
+                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                                </MudAvatar>
+                                <MudText>Glut</MudText> @* Dummy Data *@
+                            </MudItem>
+                            <MudItem Class="d-flex align-self-center justify-end" xs="6">
+                                <MudText>10</MudText> @* Dummy Data *@
+                            </MudItem>
+                        </MudGrid>
 
-                    <MudGrid Spacing="0" Class="mt-7 elevation">
-                        <MudItem xs="6">
-                            <MudText Typo="Typo.body1" Align="Align.Start">LADE-ATTACKE</MudText>
-                        </MudItem>
-                        <MudItem xs="6" Typo="Typo.body1">
-                            <MudText Align="Align.End">SCHADEN</MudText>
-                        </MudItem>
-                        <MudItem Class="d-flex  align-center" xs="6">
-                            <MudAvatar Class="ma-2" Variant="Variant.Filled">
-                                @* Dummy Data *@
-                                <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
-                            </MudAvatar>
-                            <MudText>Nitroladung</MudText> @* Dummy Data *@
-                        </MudItem>
-                        <MudItem Class="d-flex align-self-center justify-end" xs="6">
-                            <MudText>60</MudText> @* Dummy Data *@
-                        </MudItem>
-                    </MudGrid>
-                </MudTabPanel>
-            </MudTabs>
-        </MudStack>
-    </DialogContent>
-</MudDialog>
+                        <MudGrid Spacing="0" Class="mt-7 elevation">
+                            <MudItem xs="6">
+                                <MudText Typo="Typo.body1" Align="Align.Start">LADE-ATTACKE</MudText>
+                            </MudItem>
+                            <MudItem xs="6" Typo="Typo.body1">
+                                <MudText Align="Align.End">SCHADEN</MudText>
+                            </MudItem>
+                            <MudItem Class="d-flex  align-center" xs="6">
+                                <MudAvatar Class="ma-2" Variant="Variant.Filled">
+                                                @* Dummy Data *@
+                                    <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment" />
+                                </MudAvatar>
+                                <MudText>Nitroladung</MudText> @* Dummy Data *@
+                            </MudItem>
+                            <MudItem Class="d-flex align-self-center justify-end" xs="6">
+                                <MudText>60</MudText> @* Dummy Data *@
+                            </MudItem>
+                        </MudGrid>
+                    </MudTabPanel>
+                </MudTabs>
+            </MudStack>
+        </DialogContent>
+    </MudDialog>
 
-@code {
-    [Parameter]
-    public PokemonModel Pokemon { get; set; } = new PokemonModel();
+                                    @code {
+        [Parameter]
+        public PokemonModel Pokemon { get; set; } = new PokemonModel();
 
-    public decimal ConvertTo2Dezimals(decimal zahl)
-    {
-        return Math.Round(Convert.ToDecimal(zahl), 2, MidpointRounding.AwayFromZero);
-    }
+        public decimal ConvertTo2Dezimals(decimal zahl)
+        {
+            return Math.Round(Convert.ToDecimal(zahl), 2, MidpointRounding.AwayFromZero);
+        }
 }
