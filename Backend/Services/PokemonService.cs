@@ -30,9 +30,9 @@ namespace Backend.Services
 
             if (!_cache.TryGetValue(cacheKey, out PokemonModel pokemon))
             {
-                pokemon = await _dbContext.PokemonsCache?.FirstOrDefaultAsync(x =>
-                    x.Id == id.ToString().PadLeft(4, '0')
-                );
+                pokemon = await _dbContext
+                    .PokemonsCache.Include(p => p.Moves)
+                    .FirstOrDefaultAsync(x => x.Id == id.ToString().PadLeft(4, '0'));
 
                 if (pokemon == null)
                 {
@@ -40,6 +40,17 @@ namespace Backend.Services
                     var response = await _httpClient.GetFromJsonAsync<JsonElement>(url);
                     var speciesResponse = await _httpClient.GetFromJsonAsync<JsonElement>(
                         response.GetProperty("species").GetProperty("url").GetString()
+                    );
+
+                    var generationResponse = await _httpClient.GetFromJsonAsync<JsonElement>(
+                        speciesResponse.GetProperty("generation").GetProperty("url").GetString()
+                    );
+
+                    var evolutionResponse = await _httpClient.GetFromJsonAsync<JsonElement>(
+                        speciesResponse
+                            .GetProperty("evolution_chain")
+                            .GetProperty("url")
+                            .GetString()
                     );
 
                     pokemon = new PokemonModel
@@ -67,39 +78,137 @@ namespace Backend.Services
                                     .GetString()
                                     ?.CapitalizeFirstLetter() ?? string.Empty
                                 : string.Empty,
+                        Gewicht = response.GetProperty("weight").GetInt32(),
+                        Groesse = response.GetProperty("height").GetInt32(),
+                        Geschlecht = speciesResponse.GetProperty("gender_rate").GetInt32(),
+                        Beschreibung =
+                            speciesResponse
+                                .GetProperty("flavor_text_entries")
+                                .EnumerateArray()
+                                .FirstOrDefault(x =>
+                                    x.GetProperty("language").GetProperty("name").GetString()
+                                    == "de"
+                                )
+                                .GetProperty("flavor_text")
+                                .GetString()
+                                ?.Replace("\n", " ")
+                                ?.Replace("\f", " ")
+                                ?.CapitalizeFirstLetter() ?? string.Empty,
+                        Art =
+                            speciesResponse
+                                .GetProperty("genera")
+                                .EnumerateArray()
+                                .FirstOrDefault(x =>
+                                    x.GetProperty("language").GetProperty("name").GetString()
+                                    == "de"
+                                )
+                                .GetProperty("genus")
+                                .GetString()
+                                ?.CapitalizeFirstLetter() ?? string.Empty,
+                        Generation =
+                            generationResponse
+                                .GetProperty("name")
+                                .GetString()
+                                ?.CapitalizeFirstLetter() ?? string.Empty,
+
                         Habitat =
                             speciesResponse
                                 .GetProperty("habitat")
                                 .GetProperty("name")
                                 .GetString()
                                 ?.CapitalizeFirstLetter() ?? string.Empty,
-                        Hauptfähigkeit =
-                            response
-                                .GetProperty("abilities")[0]
-                                .GetProperty("ability")
-                                .GetProperty("name")
-                                .GetString()
-                                ?.CapitalizeFirstLetter() ?? string.Empty,
-                        VersteckteFähigkeit =
-                            response.GetProperty("abilities").GetArrayLength() > 1
-                                ? response
-                                    .GetProperty("abilities")[1]
-                                    .GetProperty("ability")
-                                    .GetProperty("name")
-                                    .GetString()
-                                    ?.CapitalizeFirstLetter() ?? string.Empty
-                                : string.Empty,
-                        Angriff = response
-                            .GetProperty("stats")[1]
-                            .GetProperty("base_stat")
-                            .GetInt32(),
-                        Verteidigung = response
-                            .GetProperty("stats")[2]
-                            .GetProperty("base_stat")
-                            .GetInt32(),
-                        KP = response.GetProperty("stats")[0].GetProperty("base_stat").GetInt32(),
-                        HP = response.GetProperty("stats")[3].GetProperty("base_stat").GetInt32(),
                     };
+
+                    AddGenerationChain(evolutionResponse.GetProperty("chain"), pokemon.Entwicklung);
+
+                    foreach (var type in response.GetProperty("types").EnumerateArray())
+                    {
+                        var typeResponse = await _httpClient.GetFromJsonAsync<JsonElement>(
+                            type.GetProperty("type").GetProperty("url").GetString()
+                        );
+                        var damageRelations = typeResponse.GetProperty("damage_relations");
+
+                        pokemon.SchwächeGegen = damageRelations
+                            .GetProperty("double_damage_from")
+                            .EnumerateArray()
+                            .Select(x => x.GetProperty("name").GetString().CapitalizeFirstLetter())
+                            .ToHashSet()
+                            .ToList();
+                        pokemon.ResistenzGegen = damageRelations
+                            .GetProperty("half_damage_from")
+                            .EnumerateArray()
+                            .Select(x => x.GetProperty("name").GetString().CapitalizeFirstLetter())
+                            .ToHashSet()
+                            .ToList();
+                    }
+
+                    foreach (var moveEntry in response.GetProperty("moves").EnumerateArray())
+                    {
+                        var moveDetailsUrl = moveEntry
+                            .GetProperty("move")
+                            .GetProperty("url")
+                            .GetString();
+                        var moveDetails = await _httpClient.GetFromJsonAsync<JsonElement>(
+                            moveDetailsUrl
+                        );
+
+                        if (
+                            moveDetails.TryGetProperty("power", out var powerProperty)
+                            && powerProperty.ValueKind != JsonValueKind.Null
+                            && powerProperty.GetInt32() > 0
+                        )
+                        {
+                            var damageClass = moveDetails
+                                .GetProperty("damage_class")
+                                .GetProperty("name")
+                                .GetString();
+                            if (damageClass == "physical" || damageClass == "special")
+                            {
+                                var move = new MoveModel
+                                {
+                                    Name =
+                                        moveDetails
+                                            .GetProperty("name")
+                                            .GetString()
+                                            ?.CapitalizeFirstLetter() ?? string.Empty,
+                                    Schaden = powerProperty.GetInt32(),
+                                    LevelLearnedAt = moveEntry
+                                        .GetProperty("version_group_details")[0]
+                                        .GetProperty("level_learned_at")
+                                        .GetInt32(),
+                                    Typ = moveDetails
+                                        .GetProperty("type")
+                                        .GetProperty("name")
+                                        .GetString(),
+                                };
+
+                                pokemon.Moves.Add(move);
+                            }
+                        }
+                    }
+
+                    foreach (var stat in response.GetProperty("stats").EnumerateArray())
+                    {
+                        string statName = stat.GetProperty("stat").GetProperty("name").GetString();
+                        int baseStat = stat.GetProperty("base_stat").GetInt32();
+
+                        switch (statName)
+                        {
+                            case "hp":
+                                pokemon.HP = baseStat;
+                                break;
+                            case "attack":
+                                pokemon.Attack = baseStat;
+                                break;
+                            case "defense":
+                                pokemon.Defense = baseStat;
+                                break;
+                            case "speed":
+                                pokemon.Speed = baseStat;
+                                break;
+                        }
+                    }
+
                     _dbContext.PokemonsCache.Add(pokemon);
                     await _dbContext.SaveChangesAsync();
                 }
@@ -116,6 +225,18 @@ namespace Backend.Services
             for (int id = 1; id <= limit; id++)
             {
                 yield return await GetPokemonDetailsAsyncById(id);
+            }
+        }
+
+        private static void AddGenerationChain(JsonElement chain, List<string> pokemonNames)
+        {
+            var species = chain.GetProperty("species");
+            pokemonNames.Add(species.GetProperty("name").GetString().CapitalizeFirstLetter());
+
+            var evolvesTo = chain.GetProperty("evolves_to");
+            foreach (var evolution in evolvesTo.EnumerateArray())
+            {
+                AddGenerationChain(evolution, pokemonNames);
             }
         }
     }

@@ -39,7 +39,7 @@
             return new string[0];
         }
 
-        PokemoStorage.SearchedPokemons = PokemoStorage.pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase) || x.Id == value.PadLeft(4, '0') || x.Id == value).ToList();
+        PokemoStorage.SearchedPokemons = PokemoStorage.pokemons.Where(x => x.Name.Contains(value.Trim(), StringComparison.InvariantCultureIgnoreCase) || x.Id == value.Trim().PadLeft(4, '0') || x.Id == value.Trim()).ToList();
         return PokemoStorage.pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name);
     }
 }

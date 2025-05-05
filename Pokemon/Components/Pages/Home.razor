@@ -1,10 +1,27 @@
 ﻿@page "/"
 
+<style>
+    .blur-background {
+        backdrop-filter: blur(10px);
+    }
+
+
+    .clickable-item {
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .clickable-item:hover {
+            background-color: #f0f0f0; /* Farbe beim Hover */
+        }
+
+</style>
+
 <PageTitle>Dashboard</PageTitle>
 
 <MudGrid Class="py-4">
     <MudItem Class="py-0" xs="12" sm="2">
-        <MudSelect T="string" Label="Filter by types" MultiSelection="true" ValueChanged="FilterByType" @bind-SelectedValues="selectedTypes">
+        <MudSelect T="string" Label="Filter by types" MultiSelection="true" ValueChanged="@FilterByType" @bind-SelectedValues="selectedTypes">
             <MudSelectItem Value="@("Normal")">Normal</MudSelectItem>
             <MudSelectItem Value="@("Fighting")">Fighting</MudSelectItem>
             <MudSelectItem Value="@("Flying")">Flying</MudSelectItem>
@@ -27,10 +44,16 @@
         </MudSelect>
     </MudItem>
     <MudItem Class="py-0" xs="12" sm="2">
-        <MudSelect T="string" Label="Filter by generation" MultiSelection="true" @bind-SelectedValues="selectedGen">
-            <MudSelectItem Value="@("xxx")">Gen 1</MudSelectItem>
-            <MudSelectItem Value="@("xxx")">Gen 2</MudSelectItem>
-            <MudSelectItem Value="@("xxx")">Gen 3</MudSelectItem>
+        <MudSelect T="string" Label="Filter by generation" MultiSelection="true" ValueChanged="@FilterByGen" @bind-SelectedValues="selectedGen">
+            <MudSelectItem Value="@("Generation-i")">Gen 1</MudSelectItem>
+            <MudSelectItem Value="@("Generation-ii")">Gen 2</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iii")">Gen 3</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iiii")">Gen 4</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iiiii")">Gen 5</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iiiiii")">Gen 6</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iiiiiii")">Gen 7</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iiiiiiii")">Gen 8</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iiiiiiiii")">Gen 9</MudSelectItem>
         </MudSelect>
     </MudItem>
     <MudItem xs="12" sm="8" Class="d-flex py-0 justify-end">
@@ -44,8 +67,9 @@
         @foreach(PokemonModel model in (PokemoStorage.SearchedPokemons.Any() ? PokemoStorage.SearchedPokemons : filteredPokemons))
         {
             <MudItem xs="12" sm="6" md="4" lg="3" xl="2" @key="model.Id">
-                <MudCard>
-                    <MudCardMedia Image="@model.BildUrl" />
+                <MudCard Class="clickable-item" @onclick="(()=>
+                    ShowPokemon(model))">
+                    <MudCardMedia Style="image-rendering: pixelated;" Image="@model.BildUrl" />
                     <MudCardContent Class="d-flex justify-between">
                         <MudText Typo="Typo.h6">@model.Name</MudText>
                         <MudText Typo="Typo.h6" Class="ml-auto">@($"#{model.Id}")</MudText>
@@ -70,13 +94,18 @@ else
             <PropertyColumn Property="x => x.Name" Title="Name" />
             <PropertyColumn Property="x => x.Primärtyp" Title="Primärtyp" />
             <PropertyColumn Property="x => x.Sekundärtyp" Title="Sekundärtyp" />
+            <PropertyColumn Property="x => x.Gewicht" Title="Gewicht" />
+            <PropertyColumn Property="x => x.Groesse" Title="Größe" />
+            <PropertyColumn Property="x => x.Geschlecht" Title="Geschlecht" />
+            <PropertyColumn Property="x => x.Generation" Title="Generation" />
+            <PropertyColumn Property="x => x.Art" Title="Art" />
             <PropertyColumn Property="x => x.Habitat" Title="Habitat" />
-            <PropertyColumn Property="x => x.Hauptfähigkeit" Title="Hauptfähigkeit" />
-            <PropertyColumn Property="x => x.VersteckteFähigkeit" Title="Versteckte Fähigkeit" />
-            <PropertyColumn Property="x => x.KP" Title="KP" />
             <PropertyColumn Property="x => x.HP" Title="HP" />
-            <PropertyColumn Property="x => x.Angriff" Title="Angriff" />
-            <PropertyColumn Property="x => x.Verteidigung" Title="Verteidigung" />
+            <PropertyColumn Property="x => x.Attack" Title="Attacke" />
+            <PropertyColumn Property="x => x.Defense" Title="Verteidigung" />
+            <PropertyColumn Property="x => x.Speed" Title="Geschwindigkeit" />
+
+
         </Columns>
         <PagerContent>
             <MudDataGridPager T="PokemonModel" />
@@ -96,13 +125,31 @@ else
     {
         PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
         PokemoStorage.pokemons = [];
-        // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert 
-        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(386))
+        // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert
+        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(3)) // 368
         {
             PokemoStorage.pokemons.Add(pokemon);
             filteredPokemons = PokemoStorage.pokemons;
             StateHasChanged();
         }
+    }
+
+    private void ShowPokemon(PokemonModel pokemon)
+    {
+        var options = new DialogOptions()
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+                BackgroundClass = "blur-background",
+            };
+
+        var parameters = new DialogParameters
+        {
+            { "Pokemon", pokemon }
+        };
+
+        DialogService.ShowAsync<PokemonInformatiom>("", parameters, options);
     }
 
     public string CardListViewButtonIcon => isCardView switch
@@ -113,13 +160,26 @@ else
 
     public void FilterByType()
     {
-        if (selectedTypes.Count() == 0)
+        if(selectedTypes.Count() == 0)
         {
             filteredPokemons = PokemoStorage.pokemons;
         }
         else
         {
             filteredPokemons = PokemoStorage.pokemons.Where(p => selectedTypes.Contains(p.Primärtyp) || selectedTypes.Contains(p.Sekundärtyp)).ToList();
+        }
+        StateHasChanged();
+    }
+
+    public void FilterByGen()
+    {
+        if(selectedGen.Count() == 0)
+        {
+            filteredPokemons = PokemoStorage.pokemons;
+        }
+        else
+        {
+            filteredPokemons = PokemoStorage.pokemons.Where(p => selectedGen.Contains(p.Generation)).ToList();
         }
         StateHasChanged();
     }
