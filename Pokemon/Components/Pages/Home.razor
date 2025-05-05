@@ -7,12 +7,12 @@
 
 
     .clickable-item {
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
         .clickable-item:hover {
-                background-color: #f0f0f0; /* Farbe beim Hover */
+            background-color: #f0f0f0; /* Farbe beim Hover */
         }
 
 </style>
@@ -94,13 +94,18 @@ else
             <PropertyColumn Property="x => x.Name" Title="Name" />
             <PropertyColumn Property="x => x.Primärtyp" Title="Primärtyp" />
             <PropertyColumn Property="x => x.Sekundärtyp" Title="Sekundärtyp" />
+            <PropertyColumn Property="x => x.Gewicht" Title="Gewicht" />
+            <PropertyColumn Property="x => x.Groesse" Title="Größe" />
+            <PropertyColumn Property="x => x.Geschlecht" Title="Geschlecht" />
+            <PropertyColumn Property="x => x.Generation" Title="Generation" />
+            <PropertyColumn Property="x => x.Art" Title="Art" />
             <PropertyColumn Property="x => x.Habitat" Title="Habitat" />
-            <PropertyColumn Property="x => x.Hauptfähigkeit" Title="Hauptfähigkeit" />
-            <PropertyColumn Property="x => x.VersteckteFähigkeit" Title="Versteckte Fähigkeit" />
-            <PropertyColumn Property="x => x.KP" Title="KP" />
             <PropertyColumn Property="x => x.HP" Title="HP" />
-            <PropertyColumn Property="x => x.Angriff" Title="Angriff" />
-            <PropertyColumn Property="x => x.Verteidigung" Title="Verteidigung" />
+            <PropertyColumn Property="x => x.Attack" Title="Attacke" />
+            <PropertyColumn Property="x => x.Defense" Title="Verteidigung" />
+            <PropertyColumn Property="x => x.Speed" Title="Geschwindigkeit" />
+
+
         </Columns>
         <PagerContent>
             <MudDataGridPager T="PokemonModel" />
@@ -121,7 +126,7 @@ else
         PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
         PokemoStorage.pokemons = [];
         // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert
-        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(386))
+        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(3)) // 368
         {
             PokemoStorage.pokemons.Add(pokemon);
             filteredPokemons = PokemoStorage.pokemons;
@@ -132,12 +137,12 @@ else
     private void ShowPokemon(PokemonModel pokemon)
     {
         var options = new DialogOptions()
-        {
-            CloseButton = true,
-            MaxWidth = MaxWidth.Small,
-            FullWidth = true,
-            BackgroundClass = "blur-background",
-        };
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+                BackgroundClass = "blur-background",
+            };
 
         var parameters = new DialogParameters
         {
