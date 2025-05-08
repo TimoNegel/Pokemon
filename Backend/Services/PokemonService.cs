@@ -25,7 +25,7 @@ namespace Backend.Services
 
         public async IAsyncEnumerable<PokemonModel> GetPokemonsDetailsAsync(int limit)
         {
-            limit = (limit > 100000 || limit < 0) ? 100000 : limit;
+            limit = (limit > 1302 || limit < 0) ? 1302 : limit;
             for (int id = 1; id <= limit; id++)
             {
                 PokemonModel pokemon;
@@ -45,7 +45,7 @@ namespace Backend.Services
 
         private async Task<PokemonModel?> CheckIfPokemonExists(int id)
         {
-            if (!_cache.TryGetValue($"Pokemon_{id}", out PokemonModel pokemon))
+            if (!_cache.TryGetValue($"Pokemon_{id}", out PokemonModel? pokemon))
             {
                 pokemon = await _dbContext
                     .PokemonsCache.Include(p => p.Moves)
@@ -87,9 +87,9 @@ namespace Backend.Services
             try
             {
                 int id = int.Parse(pokemon.Id);
-                pokemon = await CheckIfPokemonExists(id);
+                pokemon = await CheckIfPokemonExists(id) ?? pokemon;
 
-                if (pokemon == null || pokemon.Entwicklung.Count() == 0)
+                if (pokemon.Entwicklung.Count() == 0)
                 {
                     var response = await FetchBasicDetailsAsync(id);
                     var speciesResponse = await FetchSpeciesDetailsAsync(response);
@@ -155,7 +155,8 @@ namespace Backend.Services
         {
             try
             {
-                string speciesUrl = response.GetProperty("species").GetProperty("url").GetString();
+                string speciesUrl =
+                    response.GetProperty("species").GetProperty("url").GetString() ?? string.Empty;
                 return await ExecuteWithRetryAsync(() =>
                     _httpClient.GetFromJsonAsync<JsonElement>(speciesUrl)
                 );
@@ -171,10 +172,9 @@ namespace Backend.Services
         {
             try
             {
-                string generationUrl = speciesResponse
-                    .GetProperty("generation")
-                    .GetProperty("url")
-                    .GetString();
+                string generationUrl =
+                    speciesResponse.GetProperty("generation").GetProperty("url").GetString()
+                    ?? string.Empty;
                 return await ExecuteWithRetryAsync(() =>
                     _httpClient.GetFromJsonAsync<JsonElement>(generationUrl)
                 );
@@ -190,10 +190,9 @@ namespace Backend.Services
         {
             try
             {
-                string evolutionUrl = speciesResponse
-                    .GetProperty("evolution_chain")
-                    .GetProperty("url")
-                    .GetString();
+                string evolutionUrl =
+                    speciesResponse.GetProperty("evolution_chain").GetProperty("url").GetString()
+                    ?? string.Empty;
                 return await ExecuteWithRetryAsync(() =>
                     _httpClient.GetFromJsonAsync<JsonElement>(evolutionUrl)
                 );
@@ -297,13 +296,19 @@ namespace Backend.Services
                     pokemon.SchwächeGegen = damageRelations
                         .GetProperty("double_damage_from")
                         .EnumerateArray()
-                        .Select(x => x.GetProperty("name").GetString().CapitalizeFirstLetter())
+                        .Select(x =>
+                            x.GetProperty("name").GetString()?.CapitalizeFirstLetter()
+                            ?? string.Empty
+                        )
                         .ToHashSet()
                         .ToList();
                     pokemon.ResistenzGegen = damageRelations
                         .GetProperty("half_damage_from")
                         .EnumerateArray()
-                        .Select(x => x.GetProperty("name").GetString().CapitalizeFirstLetter())
+                        .Select(x =>
+                            x.GetProperty("name").GetString()?.CapitalizeFirstLetter()
+                            ?? string.Empty
+                        )
                         .ToHashSet()
                         .ToList();
                 }
@@ -353,10 +358,9 @@ namespace Backend.Services
                                     .GetProperty("version_group_details")[0]
                                     .GetProperty("level_learned_at")
                                     .GetInt32(),
-                                Typ = moveDetails
-                                    .GetProperty("type")
-                                    .GetProperty("name")
-                                    .GetString(),
+                                Typ =
+                                    moveDetails.GetProperty("type").GetProperty("name").GetString()
+                                    ?? string.Empty,
                             };
 
                             pokemon.Moves.Add(move);
@@ -377,7 +381,8 @@ namespace Backend.Services
             {
                 foreach (var stat in response.GetProperty("stats").EnumerateArray())
                 {
-                    string statName = stat.GetProperty("stat").GetProperty("name").GetString();
+                    string statName =
+                        stat.GetProperty("stat").GetProperty("name").GetString() ?? string.Empty;
                     int baseStat = stat.GetProperty("base_stat").GetInt32();
 
                     switch (statName)
@@ -409,7 +414,9 @@ namespace Backend.Services
             try
             {
                 var species = chain.GetProperty("species");
-                pokemonNames.Add(species.GetProperty("name").GetString().CapitalizeFirstLetter());
+                pokemonNames.Add(
+                    species.GetProperty("name").GetString()?.CapitalizeFirstLetter() ?? string.Empty
+                );
 
                 var evolvesTo = chain.GetProperty("evolves_to");
                 foreach (var evolution in evolvesTo.EnumerateArray())
