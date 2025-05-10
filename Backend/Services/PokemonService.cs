@@ -56,15 +56,6 @@ namespace Backend.Services
             return pokemon;
         }
 
-        private async Task<MoveModel?> CheckIfMoveExists(string name)
-        {
-            if (!_cache.TryGetValue($"Move_{name}", out MoveModel? move))
-            {
-                move = await _dbContext.Moves.FirstOrDefaultAsync(x => x.Name == name);
-            }
-            return move;
-        }
-
         private async Task<PokemonModel> GetPokemonBaseDetailsAsyncById(int id)
         {
             try
@@ -332,58 +323,44 @@ namespace Backend.Services
             {
                 foreach (var moveEntry in response.GetProperty("moves").EnumerateArray())
                 {
-                    MoveModel? move = await CheckIfMoveExists(
-                        moveEntry.GetProperty("name").GetString() ?? string.Empty
+                    var moveDetailsUrl = moveEntry
+                        .GetProperty("move")
+                        .GetProperty("url")
+                        .GetString();
+                    var moveDetails = await ExecuteWithRetryAsync(() =>
+                        _httpClient.GetFromJsonAsync<JsonElement>(moveDetailsUrl)
                     );
 
-                    if (move == null)
+                    if (
+                        moveDetails.TryGetProperty("power", out var powerProperty)
+                        && powerProperty.ValueKind != JsonValueKind.Null
+                        && powerProperty.GetInt32() > 0
+                    )
                     {
-                        var moveDetailsUrl = moveEntry
-                            .GetProperty("move")
-                            .GetProperty("url")
+                        var damageClass = moveDetails
+                            .GetProperty("damage_class")
+                            .GetProperty("name")
                             .GetString();
-                        var moveDetails = await ExecuteWithRetryAsync(() =>
-                            _httpClient.GetFromJsonAsync<JsonElement>(moveDetailsUrl)
-                        );
-
-                        if (
-                            moveDetails.TryGetProperty("power", out var powerProperty)
-                            && powerProperty.ValueKind != JsonValueKind.Null
-                            && powerProperty.GetInt32() > 0
-                        )
+                        if (damageClass == "physical" || damageClass == "special")
                         {
-                            var damageClass = moveDetails
-                                .GetProperty("damage_class")
-                                .GetProperty("name")
-                                .GetString();
-                            if (damageClass == "physical" || damageClass == "special")
+                            var move = new MoveModel
                             {
-                                move = new MoveModel
-                                {
-                                    Name =
-                                        moveDetails
-                                            .GetProperty("name")
-                                            .GetString()
-                                            ?.CapitalizeFirstLetter() ?? string.Empty,
-                                    Schaden = powerProperty.GetInt32(),
-                                    LevelLearnedAt = moveEntry
-                                        .GetProperty("version_group_details")[0]
-                                        .GetProperty("level_learned_at")
-                                        .GetInt32(),
-                                    Typ =
-                                        moveDetails
-                                            .GetProperty("type")
-                                            .GetProperty("name")
-                                            .GetString() ?? string.Empty,
-                                };
+                                Name =
+                                    moveDetails
+                                        .GetProperty("name")
+                                        .GetString()
+                                        ?.CapitalizeFirstLetter() ?? string.Empty,
+                                Schaden = powerProperty.GetInt32(),
+                                LevelLearnedAt = moveEntry
+                                    .GetProperty("version_group_details")[0]
+                                    .GetProperty("level_learned_at")
+                                    .GetInt32(),
+                                Typ =
+                                    moveDetails.GetProperty("type").GetProperty("name").GetString()
+                                    ?? string.Empty,
+                            };
 
-                                pokemon.Moves.Add(move);
-                                _cache.Set(
-                                    $"Move_{moveEntry.GetProperty("name").GetString()}",
-                                    move,
-                                    TimeSpan.FromHours(3)
-                                );
-                            }
+                            pokemon.Moves.Add(move);
                         }
                     }
                 }
