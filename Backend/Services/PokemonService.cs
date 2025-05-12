@@ -1,8 +1,8 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
-using Backend.Models;
+﻿using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Backend.Services
 {
@@ -10,46 +10,61 @@ namespace Backend.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _cache;
-        private readonly ApplicationDbContext _dbContext;
+
+        //private readonly ApplicationDbContext _dbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _dbFactory;
 
         public PokemonService(
             HttpClient httpClient,
             IMemoryCache cache,
-            ApplicationDbContext dbContext
+            IDbContextFactory<ApplicationDbContext> dbFactory
         )
         {
             _httpClient = httpClient;
             _cache = cache;
-            _dbContext = dbContext;
+            _dbFactory = dbFactory;
         }
 
-        public async IAsyncEnumerable<PokemonModel> GetPokemonsDetailsAsync(int limit)
+        public async Task<List<PokemonModel>> GetPokemonsDetailsAsync(int limit)
         {
-            limit = (limit > 1025 || limit < 0) ? 1025 : limit;
-            for (int id = 1; id <= limit; id++)
+            int id = 0;
+            try
             {
-                PokemonModel pokemon;
-                try
+                limit = (limit > 1025 || limit < 0) ? 1025 : limit;
+                var tasks = new List<Task<PokemonModel>>();
+
+                for(id = 1; id <= limit; id++)
                 {
-                    pokemon = await GetPokemonBaseDetailsAsyncById(id);
-                    pokemon = await GetPokemonExpandedDetailsAsync(pokemon);
+                    tasks.Add(GetPokemonBaseDetailsAsyncById(id));
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(
-                        $"Error in GetPokemonsDetailsAsync by Pokemon Id {id}: {ex.Message}"
-                    );
-                    continue;
-                }
-                yield return pokemon;
+
+                var results = await Task.WhenAll(tasks);
+                tasks.Clear();
+
+                //foreach (PokemonModel pokemon in results)
+                //{
+                //    tasks.Add(GetPokemonExpandedDetailsAsync(pokemon));
+                //}
+
+                //results = await Task.WhenAll(tasks);
+                return results.ToList();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(
+                    $"Error in GetPokemonsDetailsAsync by Pokemon Id {id}: {ex.Message}"
+                );
+                throw;
             }
         }
 
         private async Task<PokemonModel?> CheckIfPokemonExists(int id)
         {
-            if (!_cache.TryGetValue($"Pokemon_{id}", out PokemonModel? pokemon))
+            if(!_cache.TryGetValue($"Pokemon_{id}", out PokemonModel? pokemon))
             {
-                pokemon = await _dbContext
+                using var context = _dbFactory.CreateDbContext();
+
+                pokemon = await context
                     .PokemonsCache.Include(p => p.Moves)
                     .FirstOrDefaultAsync(x => x.Id == id.ToString().PadLeft(4, '0'));
             }
@@ -61,7 +76,7 @@ namespace Backend.Services
             try
             {
                 PokemonModel? pokemon = await CheckIfPokemonExists(id);
-                if (pokemon == null)
+                if(pokemon == null)
                 {
                     var response = await FetchBasicDetailsAsync(id);
                     var speciesResponse = await FetchSpeciesDetailsAsync(response);
@@ -71,13 +86,15 @@ namespace Backend.Services
                     SetStats(response, pokemon);
 
                     _cache.Set($"Pokemon_{id}", pokemon, TimeSpan.FromHours(3));
-                    _dbContext.PokemonsCache.Add(pokemon);
-                    await _dbContext.SaveChangesAsync();
+
+                    using var context = _dbFactory.CreateDbContext();
+                    context.PokemonsCache.Add(pokemon);
+                    await context.SaveChangesAsync();
                 }
 
                 return pokemon;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in GetPokemonBaseDetailsAsyncById: {ex.Message}");
                 throw;
@@ -91,7 +108,7 @@ namespace Backend.Services
                 int id = int.Parse(pokemon.Id);
                 pokemon = await CheckIfPokemonExists(id) ?? pokemon;
 
-                if (pokemon.Entwicklung.Count() == 0)
+                if(pokemon.Entwicklung.Count() == 0)
                 {
                     var response = await FetchBasicDetailsAsync(id);
                     var speciesResponse = await FetchSpeciesDetailsAsync(response);
@@ -101,13 +118,14 @@ namespace Backend.Services
                     await SetTypeDetailsAsync(response, pokemon);
                     await SetMoveDetailsAsync(response, pokemon);
 
-                    _dbContext.Entry(pokemon).CurrentValues.SetValues(pokemon);
-                    await _dbContext.SaveChangesAsync();
+                    using var context = _dbFactory.CreateDbContext();
+                    context.Entry(pokemon).CurrentValues.SetValues(pokemon);
+                    await context.SaveChangesAsync();
                 }
 
                 return pokemon;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in GetPokemonExpandedDetailsAsync: {ex.Message}");
                 throw;
@@ -117,18 +135,18 @@ namespace Backend.Services
         private async Task<T?> ExecuteWithRetryAsync<T>(Func<Task<T>> action, int maxRetries = 3)
         {
             int attempt = 0;
-            while (true)
+            while(true)
             {
                 try
                 {
                     return await action();
                 }
-                catch (Exception) when (attempt < maxRetries)
+                catch(Exception) when(attempt < maxRetries)
                 {
                     attempt++;
                     await Task.Delay(500 * attempt);
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     Console.WriteLine($"Error in ExecuteWithRetryAsync: {ex.Message}");
                     throw;
@@ -146,7 +164,7 @@ namespace Backend.Services
                     )
                 );
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in FetchBasicDetailsAsync: {ex.Message}");
                 throw;
@@ -163,7 +181,7 @@ namespace Backend.Services
                     _httpClient.GetFromJsonAsync<JsonElement>(speciesUrl)
                 );
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in FetchSpeciesDetailsAsync: {ex.Message}");
                 throw;
@@ -181,7 +199,7 @@ namespace Backend.Services
                     _httpClient.GetFromJsonAsync<JsonElement>(generationUrl)
                 );
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in FetchGenerationDetailsAsync: {ex.Message}");
                 throw;
@@ -199,7 +217,7 @@ namespace Backend.Services
                     _httpClient.GetFromJsonAsync<JsonElement>(evolutionUrl)
                 );
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in FetchEvolutionDetailsAsync: {ex.Message}");
                 throw;
@@ -270,7 +288,7 @@ namespace Backend.Services
 
                 return pokemon;
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in MapPokemonModel: {ex.Message}");
                 throw;
@@ -281,7 +299,7 @@ namespace Backend.Services
         {
             try
             {
-                foreach (var type in response.GetProperty("types").EnumerateArray())
+                foreach(var type in response.GetProperty("types").EnumerateArray())
                 {
                     var typeResponse = await ExecuteWithRetryAsync(() =>
                         _httpClient.GetFromJsonAsync<JsonElement>(
@@ -310,7 +328,7 @@ namespace Backend.Services
                         .ToList();
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in SetTypeDetailsAsync: {ex.Message}");
                 throw;
@@ -321,7 +339,7 @@ namespace Backend.Services
         {
             try
             {
-                foreach (var moveEntry in response.GetProperty("moves").EnumerateArray())
+                foreach(var moveEntry in response.GetProperty("moves").EnumerateArray())
                 {
                     var moveDetailsUrl = moveEntry
                         .GetProperty("move")
@@ -331,7 +349,7 @@ namespace Backend.Services
                         _httpClient.GetFromJsonAsync<JsonElement>(moveDetailsUrl)
                     );
 
-                    if (
+                    if(
                         moveDetails.TryGetProperty("power", out var powerProperty)
                         && powerProperty.ValueKind != JsonValueKind.Null
                         && powerProperty.GetInt32() > 0
@@ -341,7 +359,7 @@ namespace Backend.Services
                             .GetProperty("damage_class")
                             .GetProperty("name")
                             .GetString();
-                        if (damageClass == "physical" || damageClass == "special")
+                        if(damageClass == "physical" || damageClass == "special")
                         {
                             var move = new MoveModel
                             {
@@ -365,7 +383,7 @@ namespace Backend.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in SetMoveDetailsAsync: {ex.Message}");
                 throw;
@@ -376,13 +394,13 @@ namespace Backend.Services
         {
             try
             {
-                foreach (var stat in response.GetProperty("stats").EnumerateArray())
+                foreach(var stat in response.GetProperty("stats").EnumerateArray())
                 {
                     string statName =
                         stat.GetProperty("stat").GetProperty("name").GetString() ?? string.Empty;
                     int baseStat = stat.GetProperty("base_stat").GetInt32();
 
-                    switch (statName)
+                    switch(statName)
                     {
                         case "hp":
                             pokemon.HP = baseStat;
@@ -399,7 +417,7 @@ namespace Backend.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in SetStats: {ex.Message}");
                 throw;
@@ -416,12 +434,12 @@ namespace Backend.Services
                 );
 
                 var evolvesTo = chain.GetProperty("evolves_to");
-                foreach (var evolution in evolvesTo.EnumerateArray())
+                foreach(var evolution in evolvesTo.EnumerateArray())
                 {
                     SetGenerationChain(evolution, pokemonNames);
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Console.WriteLine($"Error in SetGenerationChain: {ex.Message}");
                 throw;

@@ -126,7 +126,7 @@ else
         PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
         PokemoStorage.pokemons = [];
         // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert
-        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(3)) // 368
+        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(1025)) // 1025
         {
             PokemoStorage.pokemons.Add(pokemon);
             filteredPokemons = PokemoStorage.pokemons;
