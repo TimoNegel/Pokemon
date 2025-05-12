@@ -4,6 +4,7 @@ namespace Pokemon
 {
     public static class PokemoStorage
     {
+        public static bool firstRender = true;
         public static List<PokemonModel> pokemons = [];
 
         private static List<PokemonModel> searchedPokemons = [];

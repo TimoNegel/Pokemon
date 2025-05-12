@@ -3,13 +3,13 @@
 
 <style>
     .elevation {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        background-color: rgba(254, 254, 254, 0.5);
-        padding: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: rgba(254, 254, 254, 0.5);
+    padding: 12px;
     }
 
     .spacing {
-        margin: 6px;
+    margin: 6px;
     }
 
 </style>
@@ -61,7 +61,7 @@
                             @foreach(string state in Pokemon.Entwicklung)
                             {
                                 <MudItem xs="4">
-                                    <MudImage Height="150" Src="@PokemoStorage.pokemons.FirstOrDefault(x => x.Name == state).BildUrl"></MudImage>
+                                    <MudImage Width="150" Height="150" Src="@(PokemoStorage.pokemons.Any(x => x.Name == state) ? PokemoStorage.pokemons.FirstOrDefault(x => x.Name == state).BildUrl : "/DefaultPokemon.png")"></MudImage>
                                     <MudText Align="Align.Center" Style="@(Pokemon.Name == state ? "font-weight: 900" : "font-weight: 400")" Typo="Typo.h6">@state</MudText>
                                 </MudItem>
                             }

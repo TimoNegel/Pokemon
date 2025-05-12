@@ -2,18 +2,18 @@
 
 <style>
     .blur-background {
-        backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     }
 
 
     .clickable-item {
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
     }
 
-        .clickable-item:hover {
-            background-color: #f0f0f0; /* Farbe beim Hover */
-        }
+    .clickable-item:hover {
+    background-color: #f0f0f0; /* Farbe beim Hover */
+    }
 
 </style>
 
@@ -123,18 +123,17 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
-        PokemoStorage.pokemons = [];
-        // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert
-        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(1025)) // 1025
+        if (PokemoStorage.firstRender)
         {
-            PokemoStorage.pokemons.Add(pokemon);
-            filteredPokemons = PokemoStorage.pokemons;
-            StateHasChanged();
+            PokemoStorage.pokemons = await PokemonService.GetPokemonsDetailsAsync(2);
+            PokemoStorage.firstRender = false;
         }
+        PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
+        filteredPokemons = PokemoStorage.pokemons;
+
     }
 
-    private void ShowPokemon(PokemonModel pokemon)
+    private async Task ShowPokemon(PokemonModel pokemon)
     {
         var options = new DialogOptions()
             {
@@ -144,12 +143,13 @@ else
                 BackgroundClass = "blur-background",
             };
 
+        pokemon = await PokemonService.GetPokemonExpandedDetailsAsync(pokemon);
         var parameters = new DialogParameters
         {
             { "Pokemon", pokemon }
         };
 
-        DialogService.ShowAsync<PokemonInformatiom>("", parameters, options);
+        await DialogService.ShowAsync<PokemonInformatiom>("", parameters, options);
     }
 
     public string CardListViewButtonIcon => isCardView switch
