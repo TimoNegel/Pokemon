@@ -2,18 +2,18 @@
 
 <style>
     .blur-background {
-        backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     }
 
 
     .clickable-item {
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
     }
 
-        .clickable-item:hover {
-            background-color: #f0f0f0; /* Farbe beim Hover */
-        }
+    .clickable-item:hover {
+    background-color: #f0f0f0; /* Farbe beim Hover */
+    }
 
 </style>
 
@@ -117,24 +117,40 @@ else
     private IEnumerable<string> selectedTypes = new List<string>();
     private IEnumerable<string> selectedGen = new List<string>();
 
-    private List<PokemonModel> filteredPokemons = [];
+    private List<PokemonModel> filteredPokemons = PokemoStorage.pokemons;
 
     private bool isCardView = true;
 
     protected override async Task OnInitializedAsync()
     {
-        PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
-        PokemoStorage.pokemons = [];
-        // Schauen wie man es schaft das die foreach schleife nach jedem durchlauf rendert
-        await foreach(var pokemon in PokemonService.GetPokemonsDetailsAsync(1025)) // 1025
+        if(PokemoStorage.firstRender)
         {
-            PokemoStorage.pokemons.Add(pokemon);
-            filteredPokemons = PokemoStorage.pokemons;
-            StateHasChanged();
+            PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
+            PokemoStorage.firstRender = false;
+            _ = LoadPokemonsAsync(1);
+        }
+        filteredPokemons = PokemoStorage.pokemons;
+    }
+
+    private async Task LoadPokemonsAsync(int startIndex)
+    {
+        const int batchSize = 3;
+        var newPokemons = await PokemonService.GetPokemonsDetailsAsync(startIndex, batchSize);
+        PokemoStorage.pokemons.AddRange(newPokemons);
+        filteredPokemons = PokemoStorage.pokemons;
+        StateHasChanged();
+
+
+        if(newPokemons.Count == batchSize && startIndex + batchSize <= 1025)
+        {
+            await Task.Delay(100);
+            _ =  LoadPokemonsAsync(startIndex + batchSize);
         }
     }
 
-    private void ShowPokemon(PokemonModel pokemon)
+
+
+    private async Task ShowPokemon(PokemonModel pokemon)
     {
         var options = new DialogOptions()
             {
@@ -143,7 +159,7 @@ else
                 FullWidth = true,
                 BackgroundClass = "blur-background",
             };
-
+        pokemon = await PokemonService.GetPokemonExpandedDetailsAsync(pokemon);
         var parameters = new DialogParameters
         {
             { "Pokemon", pokemon }
