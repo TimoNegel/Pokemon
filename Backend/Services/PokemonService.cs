@@ -1,8 +1,8 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
-using Backend.Models;
+﻿using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Backend.Services
 {
@@ -76,7 +76,7 @@ namespace Backend.Services
             return move;
         }
 
-        private async Task<PokemonModel> GetPokemonBaseDetailsAsyncById(int id)
+        public async Task<PokemonModel> GetPokemonBaseDetailsAsyncById(int id)
         {
             try
             {

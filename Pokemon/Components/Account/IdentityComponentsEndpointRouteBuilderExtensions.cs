@@ -1,5 +1,3 @@
-using System.Security.Claims;
-using System.Text.Json;
 using Backend.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -9,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Pokemon.Components.Account.Pages;
 using Pokemon.Components.Account.Pages.Manage;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace Microsoft.AspNetCore.Routing
 {

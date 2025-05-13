@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Models
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
-    public class ApplicationUserModel : IdentityUser { }
+    public class ApplicationUserModel : IdentityUser
+    {
+        public DateOnly LastPick { get; set; } = DateOnly.MinValue;
+        public virtual List<UserPokemonModel> UserPokemons { get; set; } = [];
+    }
 }

@@ -52,6 +52,8 @@ builder
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+builder.Services.AddControllersWithViews();
+
 builder.Services.AddSingleton<IEmailSender<ApplicationUserModel>, IdentityNoOpEmailSender>();
 
 // Add HTTP Client for API calls
@@ -59,6 +61,9 @@ builder.Services.AddHttpClient<PokemonService>();
 
 // Add Cache
 builder.Services.AddMemoryCache();
+
+builder.Services.AddScoped<PokemonService>();
+builder.Services.AddScoped<PokemonUserCollectionService>();
 
 var app = builder.Build();
 
