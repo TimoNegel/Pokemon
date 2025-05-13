@@ -125,13 +125,44 @@ else
     {
         if (PokemoStorage.firstRender)
         {
-            PokemoStorage.pokemons = await PokemonService.GetPokemonsDetailsAsync(3);
-            PokemoStorage.firstRender = false;
+            PokemoStorage.pokemons = await PokemonService.GetPokemonsDetailsAsync(12, 0);
         }
         PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
         filteredPokemons = PokemoStorage.pokemons;
 
     }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(PokemoStorage.firstRender)
+        {
+            await LoadPokemonsAsync(12);
+
+            PokemoStorage.firstRender = false;
+
+        }
+    }
+
+    private async Task LoadPokemonsAsync(int startIndex)
+    {
+        var newPokemons = await PokemonService.GetPokemonsDetailsAsync(6, startIndex);
+
+        PokemoStorage.pokemons.AddRange(newPokemons);
+
+        if(filteredPokemons.Count >= (PokemoStorage.pokemons.Count() - 6)){
+            filteredPokemons = PokemoStorage.pokemons;
+        }
+        StateHasChanged();
+
+
+        if(newPokemons.Count == 6 && startIndex <= 1025)
+        {
+            await Task.Delay(100);
+            _ = LoadPokemonsAsync(startIndex + 6);
+        }
+    }
+
 
     private async Task ShowPokemon(PokemonModel pokemon)
     {

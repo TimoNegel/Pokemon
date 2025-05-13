@@ -23,15 +23,15 @@ namespace Backend.Services
             _dbFactory = dbFactory;
         }
 
-        public async Task<List<PokemonModel>> GetPokemonsDetailsAsync(int limit)
+        public async Task<List<PokemonModel>> GetPokemonsDetailsAsync(int batchSize, int offSet)
         {
             int id = 0;
             try
             {
-                limit = (limit > 1025 || limit < 0) ? 1025 : limit;
+                batchSize = (batchSize > 1025 || batchSize < 0) ? 1025 : batchSize;
                 var tasks = new List<Task<PokemonModel>>();
 
-                for (id = 1; id <= limit; id++)
+                for (id = 1 + offSet; id <= batchSize + offSet; id++)
                 {
                     tasks.Add(GetPokemonBaseDetailsAsyncById(id));
                 }
