@@ -1,10 +1,9 @@
-name: Code Linter
+name: Code Format Check
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: [push, pull_request]
+
+env:
+  Solution_Name: Pokemon/Pokemon.sln
 
 jobs:
   format-check:
@@ -19,5 +18,8 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
     - name: Code Format überprüfen
-      run: dotnet format --verify-no-changes
+      run: dotnet format ${{ env.Solution_Name }} --verify-no-changes
