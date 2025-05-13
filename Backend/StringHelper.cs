@@ -6,7 +6,7 @@ namespace Backend
     {
         public static string CapitalizeFirstLetter(this string input)
         {
-            if(string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
                 return input;
             }
@@ -16,9 +16,9 @@ namespace Backend
 
         public static string? GetJsonString(this JsonElement element, params string[] path)
         {
-            foreach(var prop in path)
+            foreach (var prop in path)
             {
-                if(
+                if (
                     element.ValueKind == JsonValueKind.Object
                     && element.TryGetProperty(prop, out var next)
                 )

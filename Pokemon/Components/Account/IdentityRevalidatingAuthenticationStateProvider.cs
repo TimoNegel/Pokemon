@@ -36,11 +36,11 @@ namespace Pokemon.Components.Account
         )
         {
             var user = await userManager.GetUserAsync(principal);
-            if(user is null)
+            if (user is null)
             {
                 return false;
             }
-            else if(!userManager.SupportsUserSecurityStamp)
+            else if (!userManager.SupportsUserSecurityStamp)
             {
                 return true;
             }

@@ -19,7 +19,7 @@ namespace Backend.Services
         {
             var authstate = await _authenticationStateAsync.GetAuthenticationStateAsync();
 
-            if(authstate == null)
+            if (authstate == null)
             {
                 return null;
             }
@@ -30,7 +30,7 @@ namespace Backend.Services
         public async Task<DateOnly> GetCurrentUserLastPick()
         {
             var currentUserName = await GetCurrentUserName();
-            if(!string.IsNullOrEmpty(currentUserName))
+            if (!string.IsNullOrEmpty(currentUserName))
             {
                 using var context = _dbFactory.CreateDbContext();
                 var user = await context.Users
@@ -45,7 +45,7 @@ namespace Backend.Services
         public async Task AddPokemonToUserCollection(PokemonModel pokemon)
         {
             var currentUserName = await GetCurrentUserName();
-            if(!string.IsNullOrEmpty(currentUserName))
+            if (!string.IsNullOrEmpty(currentUserName))
             {
                 using var context = _dbFactory.CreateDbContext();
                 var user = await context.Users
@@ -53,11 +53,11 @@ namespace Backend.Services
                     .ThenInclude(up => up.Pokemon)
                     .FirstOrDefaultAsync(u => u.NormalizedUserName == currentUserName.ToUpper());
 
-                if(user != null)
+                if (user != null)
                 {
                     var userPokemonExists = user.UserPokemons.Any(up => up.PokemonId == pokemon.Id);
 
-                    if(!userPokemonExists)
+                    if (!userPokemonExists)
                     {
                         var userPokemon = new UserPokemonModel
                         {
@@ -76,7 +76,7 @@ namespace Backend.Services
         public async Task<List<PokemonModel>> GetUserCollection()
         {
             var currentUserName = await GetCurrentUserName();
-            if(!string.IsNullOrEmpty(currentUserName))
+            if (!string.IsNullOrEmpty(currentUserName))
             {
                 using var context = _dbFactory.CreateDbContext();
                 var user = await context.Users

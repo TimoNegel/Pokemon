@@ -21,7 +21,7 @@ namespace Pokemon.Components.Account
             uri ??= "";
 
             // Prevent open redirects.
-            if(!Uri.IsWellFormedUriString(uri, UriKind.Relative))
+            if (!Uri.IsWellFormedUriString(uri, UriKind.Relative))
             {
                 uri = navigationManager.ToBaseRelativePath(uri);
             }
