@@ -16,151 +16,164 @@
 
 <MudDialog>
     <DialogContent>
+        @if(loading)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+        }
+        else
+        {
+            <MudStack Spacing="2" AlignItems="AlignItems.Center">
 
-        <MudStack Spacing="2" AlignItems="AlignItems.Center">
+                <MudImage Height="200" Src="@Pokemon.BildUrl"></MudImage>
 
-            <MudImage Height="200" Src="@Pokemon.BildUrl"></MudImage>
+                <MudContainer Class="d-flex align-center justify-center">
+                    <MudText Typo="Typo.h4">@Pokemon.Name</MudText>
+                    <MudIcon Class="ml-2" Size="Size.Medium" Icon="@(Pokemon.Geschlecht == 1 ? Icons.Material.Filled.Male : Pokemon.Geschlecht == 8 ? Icons.Material.Filled.Female : "")"></MudIcon>
+                </MudContainer>
 
-            <MudContainer Class="d-flex align-center justify-center">
-                <MudText Typo="Typo.h4">@Pokemon.Name</MudText>
-                <MudIcon Class="ml-2" Size="Size.Medium" Icon="@(Pokemon.Geschlecht == 1 ? Icons.Material.Filled.Male : Pokemon.Geschlecht == 8 ? Icons.Material.Filled.Female : "")"></MudIcon>
-            </MudContainer>
+                <MudText Class="mb-4" Typo="Typo.h6">Findet man im @Pokemon.Habitat</MudText>
 
-            <MudText Class="mb-4" Typo="Typo.h6">Findet man im @Pokemon.Habitat</MudText>
+                <MudGrid>
+                    <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
+                        <MudText Typo="Typo.h6">@(ConvertTo2Dezimals((decimal)Pokemon.Gewicht * 100 / 1000)) KG</MudText>
+                        <MudText Class="mt-1">Gewicht</MudText>
+                    </MudItem>
+                    <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
+                        <MudAvatar Class="@Pokemon.Primärtyp.ToLower()" Variant="Variant.Filled">
+                            <MudIcon Icon="@PokemonTypesIcons.GetIcon(Pokemon.Primärtyp)" />
+                        </MudAvatar>
+                        <MudText Class="mt-1">@Pokemon.Primärtyp</MudText>
+                    </MudItem>
+                    <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
+                        <MudText Typo="Typo.h6">@(ConvertTo2Dezimals((decimal)Pokemon.Groesse / 10)) M</MudText>
+                        <MudText Class="mt-1">Größe</MudText>
+                    </MudItem>
+                </MudGrid>
 
-            <MudGrid>
-                <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals((decimal)Pokemon.Gewicht * 100 / 1000)) KG</MudText>
-                    <MudText Class="mt-1">Gewicht</MudText>
-                </MudItem>
-                <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudAvatar Class="@Pokemon.Primärtyp.ToLower()" Variant="Variant.Filled">
-                        <MudIcon Icon="@PokemonTypesIcons.GetIcon(Pokemon.Primärtyp)" />
-                    </MudAvatar>
-                    <MudText Class="mt-1">@Pokemon.Primärtyp</MudText>
-                </MudItem>
-                <MudItem Class="d-flex flex-column align-center justify-center" xs="4">
-                    <MudText Typo="Typo.h6">@(ConvertTo2Dezimals((decimal)Pokemon.Groesse / 10)) M</MudText>
-                    <MudText Class="mt-1">Größe</MudText>
-                </MudItem>
-            </MudGrid>
+                <MudDivider Class="mt-4 mb-2" />
 
-            <MudDivider Class="mt-4 mb-2" />
+                <MudTabs Centered="true">
+                    <MudTabPanel Text="Info">
+                        <MudContainer Class="mt-7 pa-0">
+                            <MudText Typo="Typo.h5">@Pokemon.Art</MudText>
+                            <MudText Class="mt-2">@Pokemon.Beschreibung</MudText>
+                        </MudContainer>
+                        <MudDivider Class="mt-4 mb-2" />
+                        <MudContainer Class="mt-7 pa-0">
+                            <MudText Typo="Typo.h5">Entwicklungen</MudText>
 
-            <MudTabs Centered="true">
-                <MudTabPanel Text="Info">
-                    <MudContainer Class="mt-7 pa-0">
-                        <MudText Typo="Typo.h5">@Pokemon.Art</MudText>
-                        <MudText Class="mt-2">@Pokemon.Beschreibung</MudText>
-                    </MudContainer>
-                    <MudDivider Class="mt-4 mb-2" />
-                    <MudContainer Class="mt-7 pa-0">
-                        <MudText Typo="Typo.h5">Entwicklungen</MudText>
-
-                        <MudGrid Class="mb-2">
-                            @foreach(string state in Pokemon.Entwicklung)
-                            {
-                                <MudItem xs="4">
-                                    <MudImage Width="150" Height="150" Src="@(PokemoStorage.pokemons.Any(x => x.Name == state) ? PokemoStorage.pokemons.FirstOrDefault(x => x.Name == state).BildUrl : "/DefaultPokemon.png")"></MudImage>
-                                    <MudText Align="Align.Center" Style="@(Pokemon.Name == state ? "font-weight: 900" : "font-weight: 400")" Typo="Typo.h6">@state</MudText>
-                                </MudItem>
-                            }
-                        </MudGrid>
-                    </MudContainer>
-                </MudTabPanel>
-
-                <MudTabPanel Text="Kampf">
-
-                    <MudGrid Spacing="0" Class="mt-7">
-                        <MudText Typo="Typo.body1" Align="Align.Start">TYPENEFFEKTIVITÄT</MudText>
-                        <MudItem Class="d-flex justify-center align-center elevation mt-1" xs="12">
-                            <MudAvatar Class="@($"ma-2 {Pokemon.Primärtyp.ToLower()}")" Variant="Variant.Filled">
-                                <MudIcon Icon="@PokemonTypesIcons.GetIcon(Pokemon.Primärtyp)" />
-                            </MudAvatar>
-                            <MudText>@Pokemon.Primärtyp</MudText>
-                        </MudItem>
-
-                        <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
-                            <MudText Typo="Typo.body1" Align="Align.Center">RESISTENZ GEGEN</MudText>
-                            <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
-                                @foreach(string resistenz in Pokemon.ResistenzGegen)
+                            <MudGrid Class="mb-2">
+                                @foreach(string state in Pokemon.Entwicklung)
                                 {
-                                    <MudTooltip Text="@resistenz" class="@resistenz.ToLower()">
-                                        <MudAvatar Class="@($"ma-1 {resistenz.ToLower()}")" Variant="Variant.Filled">
-                                            <MudIcon Icon="@PokemonTypesIcons.GetIcon(resistenz)" />
-                                        </MudAvatar>
-                                    </MudTooltip>
+                                    <MudItem xs="4">
+                                        <MudImage Width="150" Height="150" Src="@(PokemoStorage.pokemons.Any(x => x.Name == state) ? PokemoStorage.pokemons.FirstOrDefault(x => x.Name == state).BildUrl : "/DefaultPokemon.png")"></MudImage>
+                                        <MudText Align="Align.Center" Style="@(Pokemon.Name == state ? "font-weight: 900" : "font-weight: 400")" Typo="Typo.h6">@state</MudText>
+                                    </MudItem>
                                 }
-                            </MudContainer>
-                        </MudItem>
+                            </MudGrid>
+                        </MudContainer>
+                    </MudTabPanel>
 
-                        <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
-                            <MudText Typo="Typo.body1" Align="Align.Center">SCHWÄCHE GEGEN</MudText>
-                            <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
-                                @foreach(string schwaeche in Pokemon.SchwächeGegen)
-                                {
-                                    <MudTooltip Text="@schwaeche" class="@schwaeche.ToLower()">
-                                        <MudAvatar Class="@($"ma-1 {schwaeche.ToLower()}")" Variant="Variant.Filled">
-                                            <MudIcon Icon="@PokemonTypesIcons.GetIcon(schwaeche)" />
-                                        </MudAvatar>
-                                    </MudTooltip>
-                                }
-                            </MudContainer>
-                        </MudItem>
-                    </MudGrid>
+                    <MudTabPanel Text="Kampf">
 
-                    <MudText Class="mt-7" Typo="Typo.body1" Align="Align.Start">STATS</MudText>
-                    <MudGrid Spacing="0">
-                        <MudItem Class="elevation" xs="6">
-                            <MudText>HP: @Pokemon.HP</MudText>
-                        </MudItem>
-                        <MudItem Class="elevation" xs="6">
-                            <MudText>Geschwindigkeit: @Pokemon.Speed</MudText>
-                        </MudItem>
-                        <MudItem Class="elevation" xs="6">
-                            <MudText>Attacke: @Pokemon.Attack</MudText>
-                        </MudItem>
-                        <MudItem Class="elevation" xs="6">
-                            <MudText>Verteidigung: @Pokemon.Defense</MudText>
-                        </MudItem>
-                    </MudGrid>
-
-                    <MudGrid Spacing="0" Class="mt-7 elevation">
-                        <MudItem xs="6">
-                            <MudText Typo="Typo.body1" Align="Align.Start">ATTACKE</MudText>
-                        </MudItem>
-                        <MudItem xs="3">
-                            <MudText Typo="Typo.body1" Align="Align.End">ERLERNT AB LEVEL</MudText>
-                        </MudItem>
-                        <MudItem xs="3">
-                            <MudText Typo="Typo.body1" Align="Align.End">SCHADEN</MudText>
-                        </MudItem>
-
-                        @foreach(MoveModel move in Pokemon.Moves.OrderBy(move => move.LevelLearnedAt))
-                        {
-                            <MudItem Class="d-flex align-center" xs="6">
-                                <MudAvatar Class="@($"ma-2 {move.Typ}")" Variant="Variant.Filled">
-                                    <MudIcon Icon="@PokemonTypesIcons.GetIcon(move.Typ.CapitalizeFirstLetter())" />
+                        <MudGrid Spacing="0" Class="mt-7">
+                            <MudText Typo="Typo.body1" Align="Align.Start">TYPENEFFEKTIVITÄT</MudText>
+                            <MudItem Class="d-flex justify-center align-center elevation mt-1" xs="12">
+                                <MudAvatar Class="@($"ma-2 {Pokemon.Primärtyp.ToLower()}")" Variant="Variant.Filled">
+                                    <MudIcon Icon="@PokemonTypesIcons.GetIcon(Pokemon.Primärtyp)" />
                                 </MudAvatar>
-                                <MudText>@move.Name</MudText>
+                                <MudText>@Pokemon.Primärtyp</MudText>
                             </MudItem>
-                            <MudItem Class="d-flex align-self-center justify-end" xs="3">
-                                <MudText>@move.LevelLearnedAt</MudText>
+
+                            <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
+                                <MudText Typo="Typo.body1" Align="Align.Center">RESISTENZ GEGEN</MudText>
+                                <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
+                                    @foreach(string resistenz in Pokemon.ResistenzGegen)
+                                    {
+                                        <MudTooltip Text="@resistenz" class="@resistenz.ToLower()">
+                                            <MudAvatar Class="@($"ma-1 {resistenz.ToLower()}")" Variant="Variant.Filled">
+                                                <MudIcon Icon="@PokemonTypesIcons.GetIcon(resistenz)" />
+                                            </MudAvatar>
+                                        </MudTooltip>
+                                    }
+                                </MudContainer>
                             </MudItem>
-                            <MudItem Class="d-flex align-self-center justify-end" xs="3">
-                                <MudText>@move.Schaden</MudText>
+
+                            <MudItem style="height: 144px;" Class="d-flex flex-column align-self-start elevation" xs="6">
+                                <MudText Typo="Typo.body1" Align="Align.Center">SCHWÄCHE GEGEN</MudText>
+                                <MudContainer Class="d-flex  justify-center flex-wrap pa-0">
+                                    @foreach(string schwaeche in Pokemon.SchwächeGegen)
+                                    {
+                                        <MudTooltip Text="@schwaeche" class="@schwaeche.ToLower()">
+                                            <MudAvatar Class="@($"ma-1 {schwaeche.ToLower()}")" Variant="Variant.Filled">
+                                                <MudIcon Icon="@PokemonTypesIcons.GetIcon(schwaeche)" />
+                                            </MudAvatar>
+                                        </MudTooltip>
+                                    }
+                                </MudContainer>
                             </MudItem>
-                        }
-                    </MudGrid>
-                </MudTabPanel>
-            </MudTabs>
-        </MudStack>
+                        </MudGrid>
+
+                        <MudText Class="mt-7" Typo="Typo.body1" Align="Align.Start">STATS</MudText>
+                        <MudGrid Spacing="0">
+                            <MudItem Class="elevation" xs="6">
+                                <MudText>HP: @Pokemon.HP</MudText>
+                            </MudItem>
+                            <MudItem Class="elevation" xs="6">
+                                <MudText>Geschwindigkeit: @Pokemon.Speed</MudText>
+                            </MudItem>
+                            <MudItem Class="elevation" xs="6">
+                                <MudText>Attacke: @Pokemon.Attack</MudText>
+                            </MudItem>
+                            <MudItem Class="elevation" xs="6">
+                                <MudText>Verteidigung: @Pokemon.Defense</MudText>
+                            </MudItem>
+                        </MudGrid>
+
+                        <MudGrid Spacing="0" Class="mt-7 elevation">
+                            <MudItem xs="6">
+                                <MudText Typo="Typo.body1" Align="Align.Start">ATTACKE</MudText>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudText Typo="Typo.body1" Align="Align.End">ERLERNT AB LEVEL</MudText>
+                            </MudItem>
+                            <MudItem xs="3">
+                                <MudText Typo="Typo.body1" Align="Align.End">SCHADEN</MudText>
+                            </MudItem>
+                                @foreach(MoveModel move in Pokemon.Moves.OrderBy(move => move.LevelLearnedAt))
+                                {
+                                    <MudItem Class="d-flex align-center" xs="6">
+                                        <MudAvatar Class="@($"ma-2 {move.Typ}")" Variant="Variant.Filled">
+                                            <MudIcon Icon="@PokemonTypesIcons.GetIcon(move.Typ.CapitalizeFirstLetter())" />
+                                        </MudAvatar>
+                                        <MudText>@move.Name</MudText>
+                                    </MudItem>
+                                    <MudItem Class="d-flex align-self-center justify-end" xs="3">
+                                        <MudText>@move.LevelLearnedAt</MudText>
+                                    </MudItem>
+                                    <MudItem Class="d-flex align-self-center justify-end" xs="3">
+                                        <MudText>@move.Schaden</MudText>
+                                    </MudItem>
+                                }
+                        </MudGrid>
+                    </MudTabPanel>
+                </MudTabs>
+            </MudStack>
+        }
     </DialogContent>
 </MudDialog>
 
 @code {
+
     [Parameter]
     public PokemonModel Pokemon { get; set; } = new PokemonModel();
+    public bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Pokemon = await PokemonService.GetPokemonExpandedDetailsAsync(Pokemon);
+        loading = false;
+    }
 
     private decimal ConvertTo2Dezimals(decimal zahl)
     {
