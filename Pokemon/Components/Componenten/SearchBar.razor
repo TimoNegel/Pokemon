@@ -40,6 +40,10 @@
         }
 
         PokemoStorage.SearchedPokemons = PokemoStorage.pokemons.Where(x => x.Name.Contains(value.Trim(), StringComparison.InvariantCultureIgnoreCase) || x.Id == value.Trim().PadLeft(4, '0') || x.Id == value.Trim()).ToList();
-        return PokemoStorage.pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name);
+        var result = PokemoStorage.pokemons.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Name);
+
+        return await Task.FromResult(result);
+
     }
+
 }

@@ -55,11 +55,10 @@ builder
 builder.Services.AddSingleton<IEmailSender<ApplicationUserModel>, IdentityNoOpEmailSender>();
 
 // Add HTTP Client for API calls
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<PokemonService>();
 
-// Add coustom services
+// Add Cache
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<PokemonService>();
 
 var app = builder.Build();
 
