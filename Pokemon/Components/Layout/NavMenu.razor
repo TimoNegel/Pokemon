@@ -3,8 +3,11 @@
 @inject NavigationManager NavigationManager
 
 <MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CatchingPokemon">Pokedex</MudNavLink>
+
     <AuthorizeView>
         <Authorized>
+            <MudNavLink Href="collection" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Apps">Pokemon Sammlung</MudNavLink>
             <MudNavLink Href="Account/Manage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudNavLink>
             <form action="Account/Logout" method="post">
                 <AntiforgeryToken />
@@ -15,8 +18,6 @@
             </form>
         </Authorized>
         <NotAuthorized>
-            <MudNavLink Href="" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CatchingPokemon">Pokedex</MudNavLink>
-            <MudNavLink Href="user/collection" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Apps">Pokemon Sammlung</MudNavLink>
             <MudNavLink Href="Account/Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Register</MudNavLink>
             <MudNavLink Href="Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Password">Login</MudNavLink>
         </NotAuthorized>

@@ -1,0 +1,186 @@
+﻿@page "/collection"
+@inject PokemonUserCollectionService CollectionService
+
+<style>
+    .blur-background {
+    backdrop-filter: blur(10px);
+    }
+
+
+    .clickable-item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+
+    .clickable-item:hover {
+    background-color: #f0f0f0; /* Farbe beim Hover */
+    }
+
+</style>
+
+<MudGrid Class="py-4">
+    <MudItem Class="py-0" xs="12" sm="2">
+        <MudSelect T="string" Label="Filter by types" MultiSelection="true" ValueChanged="@FilterByType" @bind-SelectedValues="selectedTypes">
+            <MudSelectItem Value="@("Normal")">Normal</MudSelectItem>
+            <MudSelectItem Value="@("Fighting")">Fighting</MudSelectItem>
+            <MudSelectItem Value="@("Flying")">Flying</MudSelectItem>
+            <MudSelectItem Value="@("Poison")">Poison</MudSelectItem>
+            <MudSelectItem Value="@("Ground")">Ground</MudSelectItem>
+            <MudSelectItem Value="@("Rock")">Rock</MudSelectItem>
+            <MudSelectItem Value="@("Bug")">Bug</MudSelectItem>
+            <MudSelectItem Value="@("Ghost")">Ghost</MudSelectItem>
+            <MudSelectItem Value="@("Steel")">Steel</MudSelectItem>
+            <MudSelectItem Value="@("Fire")">Fire</MudSelectItem>
+            <MudSelectItem Value="@("Water")">Water</MudSelectItem>
+            <MudSelectItem Value="@("Grass")">Grass</MudSelectItem>
+            <MudSelectItem Value="@("Electric")">Electric</MudSelectItem>
+            <MudSelectItem Value="@("Psychic")">Psychic</MudSelectItem>
+            <MudSelectItem Value="@("Ice")">Ice</MudSelectItem>
+            <MudSelectItem Value="@("Dragon")">Dragon</MudSelectItem>
+            <MudSelectItem Value="@("Dark")">Dark</MudSelectItem>
+            <MudSelectItem Value="@("Fairy")">Fairy</MudSelectItem>
+            <MudSelectItem Value="@("Stellar")">Stellar</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+    <MudItem Class="py-0" xs="12" sm="2">
+        <MudSelect T="string" Label="Filter by generation" MultiSelection="true" ValueChanged="@FilterByGen" @bind-SelectedValues="selectedGen">
+            <MudSelectItem Value="@("Generation-i")">Gen 1</MudSelectItem>
+            <MudSelectItem Value="@("Generation-ii")">Gen 2</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iii")">Gen 3</MudSelectItem>
+            <MudSelectItem Value="@("Generation-iv")">Gen 4</MudSelectItem>
+            <MudSelectItem Value="@("Generation-v")">Gen 5</MudSelectItem>
+            <MudSelectItem Value="@("Generation-vi")">Gen 6</MudSelectItem>
+            <MudSelectItem Value="@("Generation-vii")">Gen 7</MudSelectItem>
+            <MudSelectItem Value="@("Generation-viii")">Gen 8</MudSelectItem>
+            <MudSelectItem Value="@("Generation-ix")">Gen 9</MudSelectItem>
+        </MudSelect>
+    </MudItem>
+</MudGrid>
+
+<MudButton Class="mb-2" FullWidth="true" Color="Color.Primary" Variant="Variant.Filled" OnClick="@GetRandomPokemon">Pokemon ziehen</MudButton>
+
+<MudGrid>
+    @foreach(PokemonModel model in ( filteredPokemons))
+    {
+        <MudItem xs="12" sm="6" md="4" lg="3" xl="2">
+            <MudCard Class="clickable-item" @onclick="(()=>
+                    ShowPokemon(model))">
+                <MudCardMedia Style="image-rendering: pixelated;" Image="@model.BildUrl" />
+                <MudCardContent Class="d-flex justify-between">
+                    <MudText Typo="Typo.h6">@model.Name</MudText>
+                    <MudText Typo="Typo.h6" Class="ml-auto">@($"#{model.Id}")</MudText>
+                </MudCardContent>
+                <MudCardActions Class="pl-4 pb-4">
+                    <MudButton Class="@($"rounded-pill {model.Primärtyp.ToLower()}")" Variant="Variant.Filled">@model.Primärtyp</MudButton>
+                    @if(!string.IsNullOrEmpty(model.Sekundärtyp))
+                    {
+                        <MudButton Class="@($"rounded-pill ml-5 {model.Sekundärtyp.ToLower()}")" Variant="Variant.Filled">@model.Sekundärtyp</MudButton>
+                    }
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
+
+@code {
+    private IEnumerable<string> selectedTypes = new List<string>();
+    private IEnumerable<string> selectedGen = new List<string>();
+
+    private List<PokemonModel> filteredPokemons = [];
+    private List<PokemonModel> pokemons = [];
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        pokemons = await CollectionService.GetUserCollection();
+        pokemons = pokemons.OrderBy(o => o.Id).ToList();
+        filteredPokemons = pokemons;
+    }
+
+    private void ShowPokemon(PokemonModel pokemon)
+    {
+        var options = new DialogOptions()
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+                BackgroundClass = "blur-background",
+            };
+
+        var parameters = new DialogParameters
+        {
+            { "Pokemon", pokemon }
+        };
+
+        DialogService.ShowAsync<PokemonInformatiom>("Du hast ein neues Pokemon", parameters, options);
+    }
+
+    private void ShowNoPokemon(string message)
+    {
+        var options = new DialogOptions()
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+                BackgroundClass = "blur-background",
+            };
+
+        DialogService.ShowAsync<NoPokemon>(message, options);
+    }
+
+    public void FilterByType()
+    {
+        if(selectedTypes.Count() == 0)
+        {
+            filteredPokemons = pokemons;
+        }
+        else
+        {
+            filteredPokemons = pokemons.Where(p => selectedTypes.Contains(p.Primärtyp) || selectedTypes.Contains(p.Sekundärtyp)).ToList();
+        }
+        StateHasChanged();
+    }
+
+    public void FilterByGen()
+    {
+        if(selectedGen.Count() == 0)
+        {
+            filteredPokemons = pokemons;
+        }
+        else
+        {
+            filteredPokemons = pokemons.Where(p => selectedGen.Contains(p.Generation)).ToList();
+        }
+        StateHasChanged();
+    }
+
+    public async Task GetRandomPokemon()
+    {
+        var userLastPickedDate = await CollectionService.GetCurrentUserLastPick();
+        if(userLastPickedDate.CompareTo(DateOnly.FromDateTime(DateTime.Now)) < 0)
+        {
+            var pokemon = await PokemonService.GetPokemonBaseDetailsAsyncById(new Random().Next(0, 1026));
+
+            if(pokemons.Any(up => up.Id == pokemon.Id))
+            {
+                ShowNoPokemon("SCHADE!! Du hast kein neus Pokemon");
+            }
+            else
+            {
+                _ = CollectionService.AddPokemonToUserCollection(pokemon);
+                pokemons.Add(pokemon);
+
+                if(!PokemoStorage.pokemons.Any(x => x.Id == pokemon.Id))
+                {
+                    PokemoStorage.pokemons.Add(pokemon);
+                }
+                ShowPokemon(pokemon);
+            }
+        } else
+        {
+            ShowNoPokemon("Du hast heute schon gezogen ");
+
+        }
+    }
+
+}
