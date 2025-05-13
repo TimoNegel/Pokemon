@@ -63,6 +63,19 @@ namespace Backend.Services
             return pokemon;
         }
 
+        private async Task<MoveModel?> CheckIfMoveExists(string name)
+        {
+            if (!_cache.TryGetValue($"Move_{name}", out MoveModel? move))
+            {
+                using var context = _dbFactory.CreateDbContext();
+
+                move = await context.Moves.FirstOrDefaultAsync(x =>
+                    x.Name == name.CapitalizeFirstLetter()
+                );
+            }
+            return move;
+        }
+
         private async Task<PokemonModel> GetPokemonBaseDetailsAsyncById(int id)
         {
             try
@@ -111,9 +124,7 @@ namespace Backend.Services
                     await SetMoveDetailsAsync(response, pokemon);
 
                     using var context = _dbFactory.CreateDbContext();
-                    context.PokemonsCache.Remove(pokemon);
-                    await context.SaveChangesAsync();
-                    context.PokemonsCache.Add(pokemon);
+                    context.PokemonsCache.Update(pokemon);
                     await context.SaveChangesAsync();
                 }
 
@@ -335,45 +346,63 @@ namespace Backend.Services
             {
                 foreach (var moveEntry in response.GetProperty("moves").EnumerateArray())
                 {
-                    var moveDetailsUrl = moveEntry
-                        .GetProperty("move")
-                        .GetProperty("url")
-                        .GetString();
-                    var moveDetails = await ExecuteWithRetryAsync(() =>
-                        _httpClient.GetFromJsonAsync<JsonElement>(moveDetailsUrl)
+                    var move = await CheckIfMoveExists(
+                        moveEntry.GetProperty("move").GetProperty("name").GetString()
                     );
 
-                    if (
-                        moveDetails.TryGetProperty("power", out var powerProperty)
-                        && powerProperty.ValueKind != JsonValueKind.Null
-                        && powerProperty.GetInt32() > 0
-                    )
+                    if (move is null)
                     {
-                        var damageClass = moveDetails
-                            .GetProperty("damage_class")
-                            .GetProperty("name")
+                        var moveDetailsUrl = moveEntry
+                            .GetProperty("move")
+                            .GetProperty("url")
                             .GetString();
-                        if (damageClass == "physical" || damageClass == "special")
-                        {
-                            var move = new MoveModel
-                            {
-                                Name =
-                                    moveDetails
-                                        .GetProperty("name")
-                                        .GetString()
-                                        ?.CapitalizeFirstLetter() ?? string.Empty,
-                                Schaden = powerProperty.GetInt32(),
-                                LevelLearnedAt = moveEntry
-                                    .GetProperty("version_group_details")[0]
-                                    .GetProperty("level_learned_at")
-                                    .GetInt32(),
-                                Typ =
-                                    moveDetails.GetProperty("type").GetProperty("name").GetString()
-                                    ?? string.Empty,
-                            };
+                        var moveDetails = await ExecuteWithRetryAsync(() =>
+                            _httpClient.GetFromJsonAsync<JsonElement>(moveDetailsUrl)
+                        );
 
-                            pokemon.Moves.Add(move);
+                        if (
+                            moveDetails.TryGetProperty("power", out var powerProperty)
+                            && powerProperty.ValueKind != JsonValueKind.Null
+                            && powerProperty.GetInt32() > 0
+                        )
+                        {
+                            var damageClass = moveDetails
+                                .GetProperty("damage_class")
+                                .GetProperty("name")
+                                .GetString();
+                            if (damageClass == "physical" || damageClass == "special")
+                            {
+                                move = new MoveModel
+                                {
+                                    Name =
+                                        moveDetails
+                                            .GetProperty("name")
+                                            .GetString()
+                                            ?.CapitalizeFirstLetter() ?? string.Empty,
+                                    Schaden = powerProperty.GetInt32(),
+                                    LevelLearnedAt = moveEntry
+                                        .GetProperty("version_group_details")[0]
+                                        .GetProperty("level_learned_at")
+                                        .GetInt32(),
+                                    Typ =
+                                        moveDetails
+                                            .GetProperty("type")
+                                            .GetProperty("name")
+                                            .GetString() ?? string.Empty,
+                                };
+                                pokemon.Moves.Add(move);
+                                _cache.Set(
+                                    $"Pokemon_{move.Name.ToLower()}",
+                                    move,
+                                    TimeSpan.FromHours(3)
+                                );
+                            }
                         }
+                    }
+                    else
+                    {
+                        pokemon.Moves.Add(move);
+                        _cache.Set($"Pokemon_{move.Name.ToLower()}", move, TimeSpan.FromHours(3));
                     }
                 }
             }

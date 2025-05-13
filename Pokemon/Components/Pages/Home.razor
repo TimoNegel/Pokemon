@@ -125,7 +125,7 @@ else
     {
         if (PokemoStorage.firstRender)
         {
-            PokemoStorage.pokemons = await PokemonService.GetPokemonsDetailsAsync(2);
+            PokemoStorage.pokemons = await PokemonService.GetPokemonsDetailsAsync(3);
             PokemoStorage.firstRender = false;
         }
         PokemoStorage.OnValueChange += () => InvokeAsync(StateHasChanged);
@@ -149,7 +149,7 @@ else
             { "Pokemon", pokemon }
         };
 
-        await DialogService.ShowAsync<PokemonInformatiom>("", parameters, options);
+        DialogService.ShowAsync<PokemonInformatiom>("", parameters, options);
     }
 
     public string CardListViewButtonIcon => isCardView switch
