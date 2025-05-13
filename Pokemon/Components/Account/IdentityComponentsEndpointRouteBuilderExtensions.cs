@@ -1,5 +1,3 @@
-using System.Security.Claims;
-using System.Text.Json;
 using Backend.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -9,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Pokemon.Components.Account.Pages;
 using Pokemon.Components.Account.Pages.Manage;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace Microsoft.AspNetCore.Routing
 {
@@ -105,7 +105,7 @@ namespace Microsoft.AspNetCore.Routing
                 ) =>
                 {
                     var user = await userManager.GetUserAsync(context.User);
-                    if (user is null)
+                    if(user is null)
                     {
                         return Results.NotFound(
                             $"Unable to load user with ID '{userManager.GetUserId(context.User)}'."
@@ -123,13 +123,13 @@ namespace Microsoft.AspNetCore.Routing
                     var personalDataProps = typeof(ApplicationUserModel)
                         .GetProperties()
                         .Where(prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
-                    foreach (var p in personalDataProps)
+                    foreach(var p in personalDataProps)
                     {
                         personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
                     }
 
                     var logins = await userManager.GetLoginsAsync(user);
-                    foreach (var l in logins)
+                    foreach(var l in logins)
                     {
                         personalData.Add(
                             $"{l.LoginProvider} external login provider key",
