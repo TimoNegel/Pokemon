@@ -121,11 +121,14 @@ namespace Backend.Services
 
                     SetGenerationChain(evolutionResponse.GetProperty("chain"), pokemon.Entwicklung);
                     await SetTypeDetailsAsync(response, pokemon);
-                    await SetMoveDetailsAsync(response, pokemon);
 
-                    using var context = _dbFactory.CreateDbContext();
-                    context.PokemonsCache.Update(pokemon);
-                    await context.SaveChangesAsync();
+                    _ = Task.Run(async () =>
+                    {
+                        await SetMoveDetailsAsync(response, pokemon);
+                        using var context = _dbFactory.CreateDbContext();
+                        context.PokemonsCache.Update(pokemon);
+                        await context.SaveChangesAsync();
+                    });
                 }
 
                 return pokemon;
