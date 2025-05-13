@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 env:
   Solution_Name: Pokemon/Pokemon.sln
+  Publish_Directory: publish
 
 jobs:
   format-check:
@@ -18,8 +19,8 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
-
     - name: Code Format überprüfen
       run: dotnet format ${{ env.Solution_Name }} --verify-no-changes
+
+    - name: Build Project
+      run: dotnet build ${{ env.Solution_Name }}
