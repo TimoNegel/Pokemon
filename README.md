@@ -15,7 +15,7 @@ Eine besondere Anforderung des Auftrags war die **dynamische Skalierung der Pok�
   
 Da es sich um eine Machbarkeitsstudie handelt, sind einige Aspekte noch nicht vollständig enthalten oder funktionieren nicht optimal:  
 
-❌ **Keine automatisierten Tests**  
+❌ **Keine Tests**  
 ❌ **Nicht alle Warnungen gefixt**  
 ❌ **Keine Pagination beim Laden der Daten im Pokédex**  
 ❌ **Nicht optimierte Ladezeiten in Pokédex, Pokémon-Sammlung und Detailansicht**  
@@ -23,8 +23,9 @@ Da es sich um eine Machbarkeitsstudie handelt, sind einige Aspekte noch nicht vo
 ❌ **CSS noch nicht vollständig ausgelagert**  
 ❌ **User-Management-Seiten nicht optimiert und designt**  
 ❌ **Fehlendes oder unvollständiges Error Handling**  
-❌ **Theme noch nicht vollständig angepasst (insbesondere Dark Mode)**  
+❌ **Theme noch nicht vollständig angepasst (insbesondere Dark Mode)**
 ❌ **Desktop-Anwendung ohne mobile Optimierung**  
+❌ **Keine funktionierende Suchleiste in der Sammlungsansicht**  
 
 Dieses **fiktive** Proof of Concept dient als Grundlage für eine mögliche Weiterentwicklung und soll nach Ablauf der Testphase evaluiert werden.  
 
