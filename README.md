@@ -86,7 +86,7 @@ Um dieses Projekt lokal auszuführen, folge den folgenden Schritten:
 
 ```sh
 git clone https://github.com/TimoNegel/Pokemon.git
-cd Pokemon
+cd .\Pokemon\Pokemon\
 ```
 
 ### 2️⃣ **Abhängigkeiten installieren**  
@@ -111,7 +111,7 @@ dotnet run
 ```
 
 
-Nach dem Start solltest du das Projekt unter **http://localhost:7111** oder einer ähnlichen lokalen Adresse erreichen können.  
+Nach dem Start solltest du das Projekt unter **http://localhost:5130/** oder einer ähnlichen lokalen Adresse erreichen können.  
 
 ## 🔮 Ausblicke in die Zukunft  
 
