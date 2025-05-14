@@ -6,12 +6,12 @@ Dieses Projekt nutzt die **PokéAPI**, um Pokémon-Daten abzurufen und diese in 
 
 Darüber hinaus bietet die App ein besonderes Feature für registrierte Nutzer: Jeden Tag gibt es die **Chance**, ein Pokémon einzusammeln. Allerdings bekommt man es nicht automatisch – man muss es aktiv einsammeln! Zudem kann es vorkommen, dass man das Pokémon bereits besitzt. In diesem Fall erhält man leider an diesem Tag kein neues Pokémon für die Sammlung.  
 
-Um ein authentisches Erlebnis zu schaffen, werden die **Pokémon-Bilder dynamisch angepasst**, sodass ihre Größe je nach Evolutionsstufe variiert. So erscheinen größere Pokémon entsprechend prominenter als kleinere Pokémon, was die Darstellung realistischer macht.  
+Um ein authentisches Erlebnis zu schaffen, werden die **Pokémon-Bilder angepasst**, sodass ihre Größe je nach Evolutionsstufe variiert. So erscheinen größere Pokémon entsprechend prominenter als kleinere Pokémon, was die Darstellung realistischer macht.  
 
 ## 📜 Projektauftrag  
 Dieses Projekt wurde **fiktiv** von einer **deutschen Pokémon-Community** als Proof of Concept mit einer Laufzeit von **3 Monaten** in Auftrag gegeben. Ziel ist es, die oben beschriebenen Funktionen zu implementieren und erste Erfahrungswerte zu sammeln.
 
-Eine besondere Anforderung des Auftrags war die **dynamische Skalierung der Pokémon-Bilder je nach Evolutionsstufe**. Dadurch erscheinen größere Pokémon entsprechend prominenter als kleinere Pokémon, um eine möglichst realistische Darstellung zu gewährleisten. 
+Eine besondere Anforderung des Auftrags war die **Skalierung der Pokémon-Bilder je nach Evolutionsstufe**. Dadurch erscheinen größere Pokémon entsprechend prominenter als kleinere Pokémon, um eine möglichst realistische Darstellung zu gewährleisten. 
   
 Da es sich um eine Machbarkeitsstudie handelt, sind einige Aspekte noch nicht vollständig enthalten oder funktionieren nicht optimal:  
 
