@@ -1,7 +1,7 @@
 ## 📌 Pokémon-API-Projekt  
 Eine App zur Anzeige und Sammlung von Pokémon  
 
-### 📝 Beschreibung  
+## 📝 Beschreibung 
 Dieses Projekt nutzt die **PokéAPI**, um Pokémon-Daten abzurufen und diese in einer übersichtlichen **Pokédex-ähnlichen Card/List View** darzustellen. Benutzer können sich detaillierte Informationen zu einzelnen Pokémon anzeigen lassen.  
 
 Darüber hinaus bietet die App ein besonderes Feature für registrierte Nutzer: Jeden Tag gibt es die **Chance**, ein Pokémon einzusammeln. Allerdings bekommt man es nicht automatisch – man muss es aktiv einsammeln! Zudem kann es vorkommen, dass man das Pokémon bereits besitzt. In diesem Fall erhält man leider an diesem Tag kein neues Pokémon für die Sammlung.  
@@ -28,7 +28,7 @@ Da es sich um eine Machbarkeitsstudie handelt, sind einige Aspekte noch nicht vo
 
 Dieses **fiktive** Proof of Concept dient als Grundlage für eine mögliche Weiterentwicklung und soll nach Ablauf der Testphase evaluiert werden.  
 
-### 🎯 Zielgruppe  
+## 🎯 Zielgruppe  
 Obwohl dieses Projekt als **fiktives Proof of Concept** entwickelt wurde, richtet es sich konzeptionell an folgende Gruppen:  
 
 👾 **Pokémon-Fans & Sammler** – Die Anwendung ermöglicht es, Pokémon interaktiv zu entdecken und eine virtuelle Sammlung aufzubauen.  
@@ -37,26 +37,30 @@ Obwohl dieses Projekt als **fiktives Proof of Concept** entwickelt wurde, richte
 
 Da das Projekt als Machbarkeitsstudie dient, ist es eine **potenzielle Grundlage für eine Weiterentwicklung**, bei der die Zielgruppen noch klarer definiert und spezifischer angesprochen werden können.  
 
-### ⚙️ Technologien  
+## ⚙️ Technologien  
 Dieses Projekt basiert auf folgenden Technologien:  
 
 🔹 **Programmiersprachen:** C#  
 🔹 **Framework:** Blazor Server – Für die Entwicklung der Anwendung  
    - **Begründung:** Blazor Server wurde gewählt, weil es eine leistungsstarke und moderne Lösung zur Entwicklung interaktiver Webanwendungen bietet. Es nutzt C# statt JavaScript, wodurch Entwickler in einer einzigen Sprache für Backend und Frontend arbeiten können. Ein weiterer Vorteil ist die **integrierte Authentifizierung** und das **User Management**, was die Sicherheit und Verwaltung der Benutzer erleichtert. Blazor Server ermöglicht eine **einfache Kommunikation mit der Datenbank**, da es direkt mit .NET und Entity Framework integriert werden kann. Außerdem reduziert es die **Client-seitige Rechenlast**, da die Logik auf dem Server läuft und nur UI-Updates an den Client gesendet werden. Dies führt zu einer **geringen Speicher- und CPU-Belastung** auf dem Client, was besonders für leistungsschwächere Geräte oder langsame Verbindungen von Vorteil ist. Zusätzlich unterstützt es **echte Echtzeit-Updates**, da es über SignalR arbeitet und schnelle Interaktionen ermöglicht. Ein weiterer Vorteil ist die **Wartungsfreundlichkeit**, da keine komplizierten JavaScript-Bibliotheken erforderlich sind. Durch **automatische State-Verwaltung** bleibt die UI konsistent, auch wenn sich Daten auf dem Server ändern. Nicht zuletzt bietet Blazor Server **eine enge Integration mit anderen .NET-Technologien**, was eine robuste Entwicklungsumgebung schafft. Da der Code auf dem Server läuft, sind sensible Daten und Geschäftslogik besser geschützt als bei Client-basierten Anwendungen.  
+
 🔹 **Frontend-Komponenten:** MudBlazor – Ermöglicht eine moderne und anpassbare UI  
-   - **Begründung:** MudBlazor wurde gewählt, weil es eine moderne und anpassbare UI-Komponente für Blazor bietet. Es basiert auf Material Design und ermöglicht eine ansprechende und konsistente Gestaltung der Oberfläche. Die Bibliothek stellt zahlreiche **vorbereitete Komponenten** zur Verfügung, sodass Entwickler schneller eine ansprechende UI gestalten können. **Dark Mode-Unterstützung** ist standardmäßig enthalten, was eine bessere Benutzererfahrung für viele Nutzer ermöglicht. MudBlazor bietet eine einfache **Theme-Anpassung**, wodurch Farben, Schriften und Layouts flexibel geändert werden können. Die Integration mit Blazor ist **nahtlos**, sodass Entwickler keine zusätzlichen Abhängigkeiten oder komplexe Workarounds benötigen. Zudem ist die Bibliothek **gut dokumentiert**, was die Einarbeitung erleichtert. MudBlazor verbessert die **Performance** durch optimierte Komponenten und erleichtert die **Responsive Entwicklung** für mobile und Desktop-Anwendungen. Durch regelmäßige Updates bleibt die Bibliothek aktuell und sicher, was langfristige Wartbarkeit gewährleistet.  
+
+- **Begründung:** MudBlazor wurde gewählt, weil es eine moderne und anpassbare UI-Komponente für Blazor bietet. Es basiert auf Material Design und ermöglicht eine ansprechende und konsistente Gestaltung der Oberfläche. Die Bibliothek stellt zahlreiche **vorbereitete Komponenten** zur Verfügung, sodass Entwickler schneller eine ansprechende UI gestalten können. **Dark Mode-Unterstützung** ist standardmäßig enthalten, was eine bessere Benutzererfahrung für viele Nutzer ermöglicht. MudBlazor bietet eine einfache **Theme-Anpassung**, wodurch Farben, Schriften und Layouts flexibel geändert werden können. Die Integration mit Blazor ist **nahtlos**, sodass Entwickler keine zusätzlichen Abhängigkeiten oder komplexe Workarounds benötigen. Zudem ist die Bibliothek **gut dokumentiert**, was die Einarbeitung erleichtert. MudBlazor verbessert die **Performance** durch optimierte Komponenten und erleichtert die **Responsive Entwicklung** für mobile und Desktop-Anwendungen. Durch regelmäßige Updates bleibt die Bibliothek aktuell und sicher, was langfristige Wartbarkeit gewährleistet.  
+
 🔹 **API:** PokéAPI ([https://pokeapi.co](https://pokeapi.co)) – Abruf der Pokémon-Daten  
 
 Da dieses Projekt als **Proof of Concept** entwickelt wurde, sind einige Optimierungen noch nicht vollständig umgesetzt (siehe Projektauftrag). Falls es weiterentwickelt wird, könnten weitere Technologien hinzukommen oder bestehende angepasst werden.  
 
 
-## 🔹 Technische Entscheidungen  
 
-### 🔹 Keine Verwendung einer PokéAPI-Wrapper-Bibliothek  
-Für dieses Projekt wurde bewusst auf die Nutzung einer **Wrapper-Bibliothek** für die PokéAPI verzichtet. Der direkte Zugriff auf die API ermöglicht eine **größere Flexibilität** in der Verarbeitung der Daten und verhindert unnötige Abhängigkeiten. Da dieses Projekt als **Übung** dient, soll die direkte Implementierung die praktische Erfahrung mit API-Aufrufen verbessern und ein besseres Verständnis der Datenstrukturen vermitteln.  
+## Technische Entscheidungen  
 
-### 🔹 Caching-Strategie  
-Das Projekt verwendet eine **mehrstufige Caching-Strategie** für Pokémon- und Moves-Daten, um API-Aufrufe zu minimieren und die Ladezeiten zu optimieren:  
+### Keine Verwendung einer PokéAPI-Wrapper-Bibliothek  
+- Für dieses Projekt wurde bewusst auf die Nutzung einer **Wrapper-Bibliothek** für die PokéAPI verzichtet. Der direkte Zugriff auf die API ermöglicht eine **größere Flexibilität** in der Verarbeitung der Daten und verhindert unnötige Abhängigkeiten. Da dieses Projekt als **Übung** dient, soll die direkte Implementierung die praktische Erfahrung mit API-Aufrufen verbessern und ein besseres Verständnis der Datenstrukturen vermitteln.  
+
+### Caching-Strategie  
+- Das Projekt verwendet eine **mehrstufige Caching-Strategie** für Pokémon- und Moves-Daten, um API-Aufrufe zu minimieren und die Ladezeiten zu optimieren:  
 1️⃣ Falls ein Pokémon oder ein Move bereits im **Cache** vorhanden ist, wird es direkt daraus geladen.  
 2️⃣ Falls es nicht im Cache gespeichert wurde, wird es aus der **Datenbank** abgerufen.  
 3️⃣ Falls es auch dort nicht vorhanden ist, wird es direkt über die **PokéAPI** geladen.  
@@ -65,11 +69,11 @@ Das Projekt verwendet eine **mehrstufige Caching-Strategie** für Pokémon- und 
 
 Diese Strategie sorgt für eine effiziente Verarbeitung der Daten und minimiert Ladezeiten für den Benutzer.  
 
-### 🔹 Retry-Logik bei API-Anfragen  
-Da externe APIs gelegentlich Verbindungsprobleme haben oder temporär ausfallen, wurde eine **Retry-Mechanik** integriert. Falls eine Anfrage an die PokéAPI fehlschlägt, wird sie **3 mal** in definierten Intervallen erneut gesendet, bevor ein Fehler geworfen wird. Dabei wird **exponentielles Backoff** verwendet, um unnötige Belastung der API zu vermeiden und die Chancen auf eine erfolgreiche Antwort zu erhöhen.  
+### Retry-Logik bei API-Anfragen  
+- Da externe APIs gelegentlich Verbindungsprobleme haben oder temporär ausfallen, wurde eine **Retry-Mechanik** integriert. Falls eine Anfrage an die PokéAPI fehlschlägt, wird sie **3 mal** in definierten Intervallen erneut gesendet, bevor ein Fehler geworfen wird. Dabei wird **exponentielles Backoff** verwendet, um unnötige Belastung der API zu vermeiden und die Chancen auf eine erfolgreiche Antwort zu erhöhen.  
 
-### 🔹 Error-Handling-Strategie  
-Da dieses Projekt eine **Machbarkeitsstudie** ist, wurde das **Error Handling noch nicht überall implementiert**. Die grundlegende Strategie fokussiert sich darauf, **möglichst wenige Daten zu verlieren**, während gleichzeitig sichergestellt wird, dass **Fehler nicht nachfolgende Prozesse blockieren**.  
+### Error-Handling-Strategie  
+- Da dieses Projekt eine **Machbarkeitsstudie** ist, wurde das **Error Handling noch nicht überall implementiert**. Die grundlegende Strategie fokussiert sich darauf, **möglichst wenige Daten zu verlieren**, während gleichzeitig sichergestellt wird, dass **Fehler nicht nachfolgende Prozesse blockieren**.  
 
 Eine detaillierte Implementierung der Fehlerbehandlung wird in einer späteren Version ergänzt, sobald das Projekt über die Machbarkeitsstudie hinausgeht.  
 ## ⚙️ Installation & Setup  
@@ -80,8 +84,8 @@ Um dieses Projekt lokal auszuführen, folge den folgenden Schritten:
 Öffne eine Konsole und navigiere zu dem Verzeichnis, in dem du das Projekt speichern möchtest. Führe dann diesen Befehl aus, um das Repository zu klonen:  
 
 ```sh
-git clone https://github.com/DEIN-GITHUB-NAME/DEIN-REPO-NAME.git 
-cd DEIN-REPO-NAME
+git clone https://github.com/TimoNegel/Pokemon.git
+cd Pokemon
 ```
 
 ### 2️⃣ **Abhängigkeiten installieren**  
@@ -106,7 +110,7 @@ dotnet run
 ```
 
 
-Nach dem Start solltest du das Projekt unter **http://localhost:5000** oder einer ähnlichen lokalen Adresse erreichen können.  
+Nach dem Start solltest du das Projekt unter **http://localhost:7111** oder einer ähnlichen lokalen Adresse erreichen können.  
 
 ## 🔮 Ausblicke in die Zukunft  
 
